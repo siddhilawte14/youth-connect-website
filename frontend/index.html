@@ -7,10 +7,14 @@
   <meta name="description" content="YouthConnect - Discover campus hackathons, fests, workshops, and certified NGO drives across Nashik and Pune." />
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120' fill='%239333ea'%3E%3Cpath d='M85 41L72 41C69 35 63 32 53 32C36 32 26 43 26 57C26 71 36 82 53 82C64 82 70 78 73 72L86 72C82 82 71 91 53 91C29 91 14 76 14 57C14 38 29 23 53 23C70 23 81 32 85 41Z'/%3E%3Cpath d='M68 53L92 53L92 60L68 60Z'/%3E%3Cpath d='M20 16L44 16L40 22L48 36L56 22L52 16L76 16L72 22L58 46L58 76L66 80L66 84L58 84L48 104L38 84L30 84L30 80L38 76L38 46L24 22Z'/%3E%3C/svg%3E" />
   
-  <!-- Google Fonts -->
+  <!-- Google Fonts & CDN Fonts: The Seasons (Main Headers & Highlight Text) & Gotham (Descriptions & Body) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Public+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.cdnfonts.com" crossorigin />
+  <link rel="preconnect" href="https://db.onlinewebfonts.com" crossorigin />
+  <link href="https://fonts.cdnfonts.com/css/gotham" rel="stylesheet" />
+  <link href="https://db.onlinewebfonts.com/c/9366bd460113d8bf675fd2bdfe1ce764?family=The+Seasons" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Cormorant+Garamond:ital,wght@0,500;0,700;1,500&family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -20,8 +24,14 @@
       theme: {
         extend: {
           fontFamily: {
-            serif: ['Times New Roman', 'Times', 'Tinos', 'Georgia', 'serif'],
-            sans: ['Inter', 'Public Sans', 'sans-serif'],
+            seasons: ['"The Seasons"', '"Playfair Display"', '"Bodoni MT"', 'Didot', 'Georgia', 'serif'],
+            gotham: ['Gotham', '"Gotham Pro"', 'Montserrat', 'Inter', 'sans-serif'],
+            serif: ['"The Seasons"', '"Playfair Display"', '"Bodoni MT"', 'Georgia', 'serif'],
+            sans: ['Gotham', '"Gotham Pro"', 'Montserrat', 'Inter', 'sans-serif'],
+            headline: ['"The Seasons"', '"Playfair Display"', 'Georgia', 'serif'],
+            highlight: ['"The Seasons"', '"Playfair Display"', 'Georgia', 'serif'],
+            description: ['Gotham', '"Gotham Pro"', 'Montserrat', 'Inter', 'sans-serif'],
+            body: ['Gotham', '"Gotham Pro"', 'Montserrat', 'Inter', 'sans-serif'],
           },
           colors: {
             brand: {
@@ -51,14 +61,50 @@
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
 
   <style>
-    /* Default typography: Descriptions, body text, buttons, and inputs in clean Sans-Serif */
-    body, p, span, div, button, input, select, textarea, label, a, li, .font-sans {
-      font-family: 'Inter', 'Public Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    @import url('https://fonts.cdnfonts.com/css/gotham');
+    @import url('https://db.onlinewebfonts.com/c/9366bd460113d8bf675fd2bdfe1ce764?family=The+Seasons');
+
+    @font-face {
+      font-family: 'The Seasons';
+      src: url('https://db.onlinewebfonts.com/t/9366bd460113d8bf675fd2bdfe1ce764.eot');
+      src: url('https://db.onlinewebfonts.com/t/9366bd460113d8bf675fd2bdfe1ce764.eot?#iefix') format('embedded-opentype'),
+           url('https://db.onlinewebfonts.com/t/9366bd460113d8bf675fd2bdfe1ce764.woff2') format('woff2'),
+           url('https://db.onlinewebfonts.com/t/9366bd460113d8bf675fd2bdfe1ce764.woff') format('woff'),
+           url('https://db.onlinewebfonts.com/t/9366bd460113d8bf675fd2bdfe1ce764.ttf') format('truetype');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
     }
 
-    /* Titles, Headlines, and Section Headers in classic Times New Roman */
-    h1, h2, h3, h4, h5, h6, .font-serif, .title-times {
-      font-family: 'Times New Roman', Times, 'Tinos', Georgia, serif !important;
+    @font-face {
+      font-family: 'The Seasons';
+      src: url('https://db.onlinewebfonts.com/t/9366bd460113d8bf675fd2bdfe1ce764.woff2') format('woff2');
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    /* Descriptions, Paragraphs, Body text, Buttons, & Form Inputs in geometric Gotham */
+    body, p, span, div, button, input, select, textarea, label, a, li, .font-sans, .font-gotham, .font-body, .description, .desc-text {
+      font-family: 'Gotham', 'Gotham Pro', 'Montserrat', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    /* All Main Headers, Headlines, and Titles in elegant The Seasons */
+    h1, h2, h3, h4, h5, h6, .font-serif, .font-seasons, .title-times, .font-headline, .header-title, .section-title, .modal-title, .card-title {
+      font-family: 'The Seasons', 'Playfair Display', 'Bodoni MT', 'Didot', 'Cinzel', Georgia, serif !important;
+      letter-spacing: -0.01em;
+    }
+
+    /* Highlight Text, Stats, and Glowing Accents in The Seasons */
+    .highlight-text, .text-highlight, .badge-highlight, .stat-highlight, .animate-gradient-text, .hero-highlight, .brand-highlight {
+      font-family: 'The Seasons', 'Playfair Display', 'Bodoni MT', Georgia, serif !important;
+      letter-spacing: 0.01em;
+    }
+
+    /* Paragraph & Lead descriptions in crisp Gotham */
+    p, .description, .event-description, .card-desc, .lead-desc, .sub-description {
+      font-family: 'Gotham', 'Gotham Pro', 'Montserrat', 'Inter', sans-serif !important;
+      line-height: 1.6;
     }
 
     body {
@@ -139,14 +185,7 @@
       animation-play-state: paused;
     }
 
-    @keyframes laserSweep {
-      0% { top: 5%; opacity: 0.8; box-shadow: 0 0 15px #ec4899; }
-      50% { top: 90%; opacity: 1; box-shadow: 0 0 25px #a855f7; }
-      100% { top: 5%; opacity: 0.8; box-shadow: 0 0 15px #ec4899; }
-    }
-    .animate-laser {
-      animation: laserSweep 2.2s ease-in-out infinite;
-    }
+
 
     @keyframes gradientShift {
       0% { background-position: 0% 50%; }
@@ -687,7 +726,7 @@
         name: 'Rotaract Club of Nashik Youth',
         category: 'Social & NGO',
         membersCount: 1100,
-        description: 'Empowering youth through community service, blood donation drives, Godavari cleaning drives, and educational charity.',
+        description: 'Uniting youth through community service, blood donation drives, Godavari cleaning drives, and educational charity.',
         logoUrl: 'https://images.unsplash.com/photo-1559027615-cd4628902d4a?auto=format&fit=crop&w=120&q=80',
         college: 'Inter-College Nashik',
         recentActivity: 'Announced Godavari River Cleanup Drive for next Sunday',
@@ -2225,7 +2264,6 @@
                 <div className="relative h-48 rounded-2xl bg-black border-2 border-dashed border-purple-400/50 flex flex-col items-center justify-center overflow-hidden">
                   <div className="relative w-36 h-36 border-2 border-pink-400 rounded-2xl flex items-center justify-center overflow-hidden">
                     <Icon name="qrCode" className="w-16 h-16 text-purple-300 opacity-60" />
-                    <div className="absolute left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-pink-400 to-transparent animate-laser pointer-events-none" />
                   </div>
                   <span className="absolute bottom-2 text-[10px] text-purple-200">Point at student digital pass QR</span>
                 </div>

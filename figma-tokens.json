@@ -1,0 +1,159 @@
+{
+  "$schema": "https://tokens.studio/schemas/token-set-dictionary.json",
+  "global": {
+    "color": {
+      "bg": {
+        "canvas": { "value": "#070913", "type": "color", "description": "Cosmic Deep Space background" },
+        "surface": { "value": "#181126", "type": "color", "description": "Modal & panel surface" },
+        "glass-base": { "value": "rgba(255, 255, 255, 0.10)", "type": "color" },
+        "glass-border": { "value": "rgba(255, 255, 255, 0.18)", "type": "color" },
+        "glass-border-highlight": { "value": "rgba(255, 255, 255, 0.35)", "type": "color" }
+      },
+      "brand": {
+        "primary": { "value": "#8B7CB6", "type": "color", "description": "YouthConnect Lavender Purple" },
+        "primary-dark": { "value": "#7C6BA6", "type": "color" },
+        "pink": { "value": "#EC4899", "type": "color", "description": "Vibrant accent pink" },
+        "pink-light": { "value": "#F472B6", "type": "color" },
+        "pink-glow": { "value": "#D8B4FE", "type": "color" },
+        "indigo": { "value": "#6366F1", "type": "color" }
+      },
+      "status": {
+        "emerald": { "value": "#10B981", "type": "color", "description": "Verified & Free tickets" },
+        "emerald-light": { "value": "#34D399", "type": "color" },
+        "amber": { "value": "#F59E0B", "type": "color", "description": "Trending & Cash Grants" },
+        "rose": { "value": "#F43F5E", "type": "color", "description": "Fests & Alerts" }
+      },
+      "text": {
+        "primary": { "value": "#FFFFFF", "type": "color" },
+        "secondary": { "value": "#E9D5FF", "type": "color" },
+        "muted": { "value": "#A8A29E", "type": "color" },
+        "accent": { "value": "#F472B6", "type": "color" }
+      }
+    },
+    "fontFamilies": {
+      "headers": {
+        "value": "The Seasons",
+        "type": "fontFamilies",
+        "description": "Used for all main titles, headlines, section headers & highlight text"
+      },
+      "descriptions": {
+        "value": "Gotham",
+        "type": "fontFamilies",
+        "description": "Used for all descriptions, body copy, form fields, and buttons"
+      },
+      "headers-fallback": {
+        "value": "Playfair Display, Bodoni MT, Georgia, serif",
+        "type": "fontFamilies"
+      },
+      "descriptions-fallback": {
+        "value": "Gotham Pro, Montserrat, Inter, sans-serif",
+        "type": "fontFamilies"
+      }
+    },
+    "typography": {
+      "hero-title": {
+        "fontFamily": "{fontFamilies.headers}",
+        "fontWeight": "700",
+        "fontSize": "56px",
+        "lineHeight": "64px",
+        "letterSpacing": "-1%",
+        "type": "typography"
+      },
+      "section-h2": {
+        "fontFamily": "{fontFamilies.headers}",
+        "fontWeight": "700",
+        "fontSize": "32px",
+        "lineHeight": "40px",
+        "letterSpacing": "-1%",
+        "type": "typography"
+      },
+      "card-title-h4": {
+        "fontFamily": "{fontFamilies.headers}",
+        "fontWeight": "700",
+        "fontSize": "18px",
+        "lineHeight": "24px",
+        "type": "typography"
+      },
+      "stat-highlight": {
+        "fontFamily": "{fontFamilies.headers}",
+        "fontWeight": "700",
+        "fontSize": "28px",
+        "lineHeight": "34px",
+        "letterSpacing": "1%",
+        "type": "typography"
+      },
+      "body-description-large": {
+        "fontFamily": "{fontFamilies.descriptions}",
+        "fontWeight": "400",
+        "fontSize": "18px",
+        "lineHeight": "28px",
+        "type": "typography"
+      },
+      "body-description-regular": {
+        "fontFamily": "{fontFamilies.descriptions}",
+        "fontWeight": "400",
+        "fontSize": "14px",
+        "lineHeight": "22px",
+        "type": "typography"
+      },
+      "body-description-small": {
+        "fontFamily": "{fontFamilies.descriptions}",
+        "fontWeight": "400",
+        "fontSize": "12px",
+        "lineHeight": "18px",
+        "type": "typography"
+      },
+      "pill-badge": {
+        "fontFamily": "{fontFamilies.descriptions}",
+        "fontWeight": "700",
+        "fontSize": "11px",
+        "lineHeight": "14px",
+        "letterSpacing": "5%",
+        "type": "typography"
+      }
+    },
+    "borderRadius": {
+      "sm": { "value": "8px", "type": "borderRadius" },
+      "md": { "value": "12px", "type": "borderRadius" },
+      "lg": { "value": "16px", "type": "borderRadius" },
+      "xl": { "value": "24px", "type": "borderRadius" },
+      "2xl": { "value": "32px", "type": "borderRadius" },
+      "full": { "value": "9999px", "type": "borderRadius" }
+    },
+    "boxShadow": {
+      "glass-panel-3d": {
+        "value": {
+          "x": "0",
+          "y": "12",
+          "blur": "40",
+          "spread": "0",
+          "color": "rgba(0, 0, 0, 0.65)",
+          "type": "dropShadow"
+        },
+        "type": "boxShadow"
+      },
+      "glow-pink": {
+        "value": {
+          "x": "0",
+          "y": "0",
+          "blur": "25",
+          "spread": "0",
+          "color": "rgba(236, 72, 153, 0.45)",
+          "type": "dropShadow"
+        },
+        "type": "boxShadow"
+      },
+      "glow-brand": {
+        "value": {
+          "x": "0",
+          "y": "0",
+          "blur": "20",
+          "spread": "0",
+          "color": "rgba(139, 124, 182, 0.45)",
+          "type": "dropShadow"
+        },
+        "type": "boxShadow"
+      }
+    }
+  }
+}

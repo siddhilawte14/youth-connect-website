@@ -520,7 +520,7 @@ export const COMMUNITY_CLUBS: CommunityClub[] = [
     name: 'Rotaract Club of Nashik Youth',
     category: 'NGO & Social Impact',
     membersCount: 1100,
-    description: 'Empowering youth through community service, blood donation drives, Godavari cleaning drives, and educational charity.',
+    description: 'Uniting youth through community service, blood donation drives, Godavari cleaning drives, and educational charity.',
     logoUrl: 'https://images.unsplash.com/photo-1559027615-cd4628902d4a?auto=format&fit=crop&w=120&q=80',
     whatsappLink: 'https://chat.whatsapp.com/demo-rotaract-nashik',
     isVerified: true,

@@ -733,7 +733,7 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
           {volunteerDrives.length > 0 && (
             <ContentRail
               title="🌱 NGO Volunteer Drives & Social Impact"
-              subtitle="Environmental cleanup, social empowerment, and community certificates"
+              subtitle="Environmental cleanup, social impact, and community certificates"
               events={volunteerDrives}
               onSelectEvent={handleViewDetail}
               onToggleSave={handleToggleSave}

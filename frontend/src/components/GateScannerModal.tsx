@@ -173,10 +173,6 @@ export const GateScannerModal: React.FC<GateScannerModalProps> = ({
           <div className="relative bg-[#050b14] rounded-2xl h-52 overflow-hidden flex flex-col items-center justify-center text-white border-2 border-blue-500/30">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,88,190,0.25)_0,transparent_70%)]" />
             
-            {/* Animated Laser Sweep */}
-            {scanStatus === 'READY_TO_SCAN' && (
-              <div className="absolute top-0 left-0 w-full h-1 bg-emerald-400 shadow-[0_0_16px_#34d399] animate-bounce" />
-            )}
 
             {/* Target Reticle */}
             <div className={`w-36 h-36 border-2 border-dashed rounded-2xl relative flex items-center justify-center transition-colors ${
