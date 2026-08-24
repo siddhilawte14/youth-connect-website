@@ -285,14 +285,12 @@
     };
 
     // --- OFFICIAL YOUTHCONNECT MONOGRAM LOGO ---
-    const YouthConnectLogo = ({ className = "w-8 h-8", color = "currentColor" }) => (
-      <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
-        <g fill={color} fillRule="evenodd">
-          <path d="M 85 41 L 72 41 C 69 35, 63 32, 53 32 C 36 32, 26 43, 26 57 C 26 71, 36 82, 53 82 C 64 82, 70 78, 73 72 L 86 72 C 82 82, 71 91, 53 91 C 29 91, 14 76, 14 57 C 14 38, 29 23, 53 23 C 70 23, 81 32, 85 41 Z" />
-          <path d="M 68 53 L 92 53 L 92 60 L 68 60 Z" />
-          <path d="M 20 16 L 44 16 L 40 22 L 48 36 L 56 22 L 52 16 L 76 16 L 72 22 L 58 46 L 58 76 L 66 80 L 66 84 L 58 84 L 48 104 L 38 84 L 30 84 L 30 80 L 38 76 L 38 46 L 24 22 Z" />
-        </g>
-      </svg>
+    const YouthConnectLogo = ({ className = "w-8 h-8" }) => (
+      <img
+        src="./assets/logo.png"
+        alt="YouthConnect Logo"
+        className={`object-cover rounded-lg ${className}`}
+      />
     );
 
     // --- INTERACTIVE FLUID CANVAS BACKGROUND WITH STARDUST PARTICLES ---
