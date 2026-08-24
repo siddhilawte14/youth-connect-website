@@ -1,0 +1,2226 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>YouthConnect | Collegiate Student Campus Hub</title>
+  <meta name="description" content="YouthConnect - Discover campus hackathons, fests, workshops, and certified NGO drives across Nashik and Pune." />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120' fill='%239333ea'%3E%3Cpath d='M85 41L72 41C69 35 63 32 53 32C36 32 26 43 26 57C26 71 36 82 53 82C64 82 70 78 73 72L86 72C82 82 71 91 53 91C29 91 14 76 14 57C14 38 29 23 53 23C70 23 81 32 85 41Z'/%3E%3Cpath d='M68 53L92 53L92 60L68 60Z'/%3E%3Cpath d='M20 16L44 16L40 22L48 36L56 22L52 16L76 16L72 22L58 46L58 76L66 80L66 84L58 84L48 104L38 84L30 84L30 80L38 76L38 46L24 22Z'/%3E%3C/svg%3E" />
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Public+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['Times New Roman', 'Times', 'Tinos', 'Georgia', 'serif'],
+            sans: ['Inter', 'Public Sans', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#faf5ff',
+              100: '#f3e8ff',
+              200: '#e9d5ff',
+              300: '#d8b4fe',
+              400: '#c084fc',
+              500: '#a855f7',
+              600: '#9333ea',
+              700: '#7e22ce',
+              800: '#6b21a8',
+              900: '#581c87',
+            },
+            primary: '#8B7CB6',
+            'primary-dark': '#7C6BA6',
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- React 18 & Babel Standalone CDNs -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
+
+  <style>
+    * {
+      font-family: 'Times New Roman', Times, 'Tinos', Georgia, serif !important;
+    }
+    body {
+      background-color: #070913;
+      color: #ffffff;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+    
+    /* 3D Dark Cosmic Glassmorphism */
+    .glass-panel-3d {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.04) 50%, rgba(139, 124, 182, 0.10) 100%);
+      backdrop-filter: blur(24px) saturate(160%);
+      -webkit-backdrop-filter: blur(24px) saturate(160%);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-top-color: rgba(255, 255, 255, 0.35);
+      border-left-color: rgba(255, 255, 255, 0.28);
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.22), 0 12px 40px rgba(0, 0, 0, 0.65);
+    }
+    .glass-card-crystal {
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.03) 60%, rgba(99, 102, 241, 0.08) 100%);
+      backdrop-filter: blur(20px) saturate(150%);
+      -webkit-backdrop-filter: blur(20px) saturate(150%);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-top-color: rgba(255, 255, 255, 0.30);
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.20), 0 12px 40px rgba(0, 0, 0, 0.55);
+    }
+    .glass-pill-active {
+      background: linear-gradient(90deg, #7C6BA6 0%, #8B7CB6 100%);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(216, 180, 254, 0.50);
+      box-shadow: 0 0 15px rgba(139, 124, 182, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.40);
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.08); }
+    }
+    .ambient-glow {
+      animation: pulseGlow 8s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body class="bg-[#070913] text-stone-100 antialiased min-h-screen selection:bg-[#8B7CB6]/40 selection:text-white relative">
+  
+  <div id="root"></div>
+
+  <!-- Main Application Script -->
+  <script type="text/babel">
+    const { useState, useEffect, useMemo, useRef } = React;
+
+    // --- ICON HELPER COMPONENTS (Crisp SVG) ---
+    const Icon = ({ name, className = "w-4 h-4", ...props }) => {
+      const icons = {
+        compass: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>,
+        mapPin: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>,
+        search: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>,
+        user: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>,
+        ticket: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/></svg>,
+        arrowRight: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>,
+        chevronRight: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>,
+        chevronLeft: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>,
+        chevronDown: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>,
+        check: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>,
+        checkCircle: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>,
+        x: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>,
+        shieldCheck: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>,
+        sparkles: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>,
+        flame: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>,
+        heart: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>,
+        calendar: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>,
+        calendarPlus: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><line x1="10" x2="14" y1="16" y2="16"/><line x1="12" x2="12" y1="14" y2="18"/></svg>,
+        clock: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>,
+        qrCode: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="5" height="5" x="3" y="3" rx="1"/><rect width="5" height="5" x="16" y="3" rx="1"/><rect width="5" height="5" x="3" y="16" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/><path d="M12 7v3a2 2 0 0 1-2 2H7"/><path d="M3 12h.01"/><path d="M12 3h.01"/><path d="M12 16v.01"/><path d="M16 12h1"/><path d="M21 12v.01"/><path d="M12 21v-1"/></svg>,
+        code: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>,
+        party: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5.8 11.3 2 22l10.7-3.79"/><path d="M4 3h.01"/><path d="M22 8h.01"/><path d="M15 2h.01"/><path d="M22 20h.01"/><path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12v0c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10"/><path d="m22 13-.82-.33c-.86-.34-1.82.2-1.98 1.11v0c-.11.7-.72 1.22-1.43 1.22H17"/></svg>,
+        heartHand: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M12 5 9.04 7.96a2.17 2.17 0 0 0 0 3.08c.82.82 2.13.85 3 .07l2.07-1.9a2.82 2.82 0 0 1 3.79 0l2.96 2.66"/></svg>,
+        wrench: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>,
+        users: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>,
+        download: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>,
+        share: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>,
+        copy: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>,
+        lock: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>,
+        building: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="16" height="20" x="4" y="2" rx="2" ry="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M8 10h.01"/><path d="M16 10h.01"/><path d="M8 14h.01"/><path d="M16 14h.01"/></svg>,
+        graduation: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>,
+        logout: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>,
+        send: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" x2="11" y1="2" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>,
+        sliders: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" x2="4" y1="21" y2="14"/><line x1="4" x2="4" y1="10" y2="3"/><line x1="12" x2="12" y1="21" y2="12"/><line x1="12" x2="12" y1="8" y2="3"/><line x1="20" x2="20" y1="21" y2="16"/><line x1="20" x2="20" y1="12" y2="3"/><line x1="1" x2="7" y1="14" y2="14"/><line x1="9" x2="15" y1="8" y2="8"/><line x1="17" x2="23" y1="16" y2="16"/></svg>,
+        plus: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>,
+        tag: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/><circle cx="7" cy="7" r=".5" fill="currentColor"/></svg>,
+        radio: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"/></svg>,
+        camera: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>,
+        award: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>,
+        trophy: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.45.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.45.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>,
+        key: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></svg>,
+        eye: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>,
+        eyeOff: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/></svg>,
+      };
+      return <span className={`inline-flex items-center justify-center shrink-0 ${className}`} {...props}>{icons[name] || null}</span>;
+    };
+
+    // --- OFFICIAL YOUTHCONNECT MONOGRAM LOGO ---
+    const YouthConnectLogo = ({ className = "w-8 h-8", color = "currentColor" }) => (
+      <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+        <g fill={color} fillRule="evenodd">
+          <path d="M 85 41 L 72 41 C 69 35, 63 32, 53 32 C 36 32, 26 43, 26 57 C 26 71, 36 82, 53 82 C 64 82, 70 78, 73 72 L 86 72 C 82 82, 71 91, 53 91 C 29 91, 14 76, 14 57 C 14 38, 29 23, 53 23 C 70 23, 81 32, 85 41 Z" />
+          <path d="M 68 53 L 92 53 L 92 60 L 68 60 Z" />
+          <path d="M 20 16 L 44 16 L 40 22 L 48 36 L 56 22 L 52 16 L 76 16 L 72 22 L 58 46 L 58 76 L 66 80 L 66 84 L 58 84 L 48 104 L 38 84 L 30 84 L 30 80 L 38 76 L 38 46 L 24 22 Z" />
+        </g>
+      </svg>
+    );
+
+    // --- INTERACTIVE FLUID CANVAS BACKGROUND ---
+    const FluidBackground = () => {
+      const canvasRef = useRef(null);
+
+      useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        let animationFrameId;
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        const resize = () => {
+          width = canvas.width = window.innerWidth;
+          height = canvas.height = window.innerHeight;
+        };
+        window.addEventListener('resize', resize);
+
+        const PALETTE = [
+          { r: 139, g: 124, b: 182, a: 0.25 }, // #8B7CB6 Pastel Purple
+          { r: 99, g: 102, b: 241, a: 0.22 },  // Indigo
+          { r: 236, g: 72, b: 153, a: 0.20 },  // Pink
+          { r: 59, g: 130, b: 246, a: 0.22 },  // Blue
+          { r: 168, g: 85, b: 247, a: 0.24 },  // Violet
+        ];
+
+        const nodes = Array.from({ length: 6 }, (_, i) => ({
+          baseX: (0.2 + 0.6 * Math.random()) * width,
+          baseY: (0.2 + 0.6 * Math.random()) * height,
+          x: width * 0.5,
+          y: height * 0.5,
+          radius: Math.min(width, height) * (0.3 + Math.random() * 0.2),
+          color: PALETTE[i % PALETTE.length],
+          freqX: 0.0004 + Math.random() * 0.0004,
+          freqY: 0.0004 + Math.random() * 0.0004,
+          phase: Math.random() * Math.PI * 2,
+        }));
+
+        let mouse = { x: width / 2, y: height / 2, targetX: width / 2, targetY: height / 2 };
+        const handleMove = (e) => {
+          mouse.targetX = e.clientX;
+          mouse.targetY = e.clientY;
+        };
+        window.addEventListener('mousemove', handleMove);
+
+        const render = (t) => {
+          mouse.x += (mouse.targetX - mouse.x) * 0.08;
+          mouse.y += (mouse.targetY - mouse.y) * 0.08;
+
+          ctx.clearRect(0, 0, width, height);
+
+          nodes.forEach((n) => {
+            const curX = n.baseX + Math.sin(t * n.freqX + n.phase) * (width * 0.15);
+            const curY = n.baseY + Math.cos(t * n.freqY + n.phase) * (height * 0.15);
+
+            const dx = mouse.x - curX;
+            const dy = mouse.y - curY;
+            const dist = Math.hypot(dx, dy);
+            const maxDist = 300;
+            let pushX = 0, pushY = 0;
+            if (dist < maxDist) {
+              const force = (1 - dist / maxDist) * 50;
+              pushX = -(dx / dist) * force;
+              pushY = -(dy / dist) * force;
+            }
+
+            const grad = ctx.createRadialGradient(curX + pushX, curY + pushY, 0, curX + pushX, curY + pushY, n.radius);
+            grad.addColorStop(0, `rgba(${n.color.r}, ${n.color.g}, ${n.color.b}, ${n.color.a})`);
+            grad.addColorStop(0.6, `rgba(${n.color.r}, ${n.color.g}, ${n.color.b}, ${n.color.a * 0.4})`);
+            grad.addColorStop(1, `rgba(${n.color.r}, ${n.color.g}, ${n.color.b}, 0)`);
+
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.arc(curX + pushX, curY + pushY, n.radius, 0, Math.PI * 2);
+            ctx.fill();
+          });
+
+          animationFrameId = requestAnimationFrame(render);
+        };
+
+        animationFrameId = requestAnimationFrame(render);
+
+        return () => {
+          cancelAnimationFrame(animationFrameId);
+          window.removeEventListener('resize', resize);
+          window.removeEventListener('mousemove', handleMove);
+        };
+      }, []);
+
+      return (
+        <div className="fixed inset-0 pointer-events-none -z-10 overflow-hidden w-full h-full">
+          <div 
+            className="fixed inset-0 w-full h-full bg-cover bg-center opacity-70"
+            style={{
+              backgroundImage: `url('https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?auto=format&fit=crop&w=2000&q=85')`,
+              backgroundColor: '#070913'
+            }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#070913]/70 via-[#070913]/40 to-[#070913]/90" />
+          <canvas ref={canvasRef} className="w-full h-full block" />
+          <div className="absolute inset-0 backdrop-blur-[32px]" />
+        </div>
+      );
+    };
+
+    // --- MOCK DATABASE ---
+    const PREMIER_COLLEGES = [
+      'MET Bhujbal Knowledge City, Adgaon, Nashik',
+      'KKWIEER (K. K. Wagh Institute of Engineering Education and Research), Nashik',
+      "NDMVP's KBT College of Engineering, Nashik",
+      'COEP Technological University, Pune'
+    ];
+
+    const INITIAL_EVENTS = [
+      {
+        id: 'evt-techsprint-2026',
+        title: 'Nashik TechSprint 2026: 24-Hour AI & Web3 Hackathon',
+        category: 'Hackathon',
+        districtTab: 'Hackathons',
+        tags: ['Hackathon', 'AI Sprint', 'Web3', 'Prize: ₹1.5L', 'Trending'],
+        genres: ['Tech', 'Hackathon', 'AI'],
+        languages: ['English', 'Hindi', 'Marathi'],
+        formats: ['In-Person (Nashik Campus)', 'Prize Pool'],
+        rating: '4.9★',
+        votesCount: '1.4k students',
+        date: { month: 'OCT', day: '12', fullDate: 'Oct 12-13, 2026', time: '09:00 AM - Overnight 24h' },
+        venue: 'KKWIEER Main Auditorium, Panchavati',
+        area: 'Panchavati, Nashik',
+        city: 'Nashik',
+        fee: 0,
+        feeLabel: 'FREE REGISTRATION',
+        isHot: true,
+        status: 'Published',
+        bannerUrl: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=1200&q=80',
+        posterUrl: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=600&h=800&q=80',
+        organizer: { name: 'Nashik Coders Hub & IEEE', isVerified: true, type: 'College Club' },
+        description: 'Nashik’s flagship 24-hour inter-collegiate hackathon bringing together 400+ student developers, AI researchers, and designers. Build innovative prototypes for Civic Tech, Fintech, and Healthcare with mentorship and prize pool.',
+        capacity: 450,
+        registeredCount: 412,
+        isRegistered: true,
+        ticketId: 'TKT-8492-XYS',
+        isSaved: true,
+        whatYouGet: ['Official IEEE Hackathon Participation Certificate', 'Free 24h WiFi, food & swag kit', 'Cash Prize Pool worth ₹1,50,000', 'Direct interview fast-track']
+      },
+      {
+        id: 'evt-symphony-fest-2026',
+        title: 'Symphony 2026: Inter-College Cultural Fest & Live Concert',
+        category: 'Cultural',
+        districtTab: 'College Fests',
+        tags: ['College Fest', 'Live Concert', 'Battle of Bands', 'Drama', 'Trending'],
+        genres: ['Cultural', 'Music', 'Drama'],
+        languages: ['Marathi', 'Hindi', 'English'],
+        formats: ['In-Person (Nashik Campus)', 'Live Stage'],
+        rating: '4.9★',
+        votesCount: '3.8k students',
+        date: { month: 'OCT', day: '18', fullDate: 'Oct 18-20, 2026', time: '10:00 AM - 10:00 PM' },
+        venue: 'NDMVPS Open Air Amphitheatre, Gangapur Road',
+        area: 'Gangapur Road, Nashik',
+        city: 'Nashik',
+        fee: 150,
+        feeLabel: '3-Day Pass: ₹150',
+        isHot: true,
+        status: 'Published',
+        bannerUrl: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1200&q=80',
+        posterUrl: 'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=600&h=800&q=80',
+        organizer: { name: 'NDMVPS Student Cultural Council', isVerified: true, type: 'Student Committee' },
+        description: 'Nashik’s largest annual student celebration featuring battle of bands, classical fusion dance, street play competitions, and celebrity headline concert on the grand finale.',
+        capacity: 2000,
+        registeredCount: 1680,
+        isRegistered: false,
+        isSaved: true,
+        whatYouGet: ['Access to all 3-Day cultural stages', 'Celebrity Headline Concert Entry', 'Campus fest badge & coupon booklet']
+      },
+      {
+        id: 'evt-godavari-river-cleanup',
+        title: 'Godavari River Clean-up & Youth Volunteer Drive',
+        category: 'NGO Drives',
+        districtTab: 'NGO Drives',
+        tags: ['VOLUNTEER', 'CERTIFICATE PROVIDED', 'COMMUNITY HOURS', 'Eco Action', 'Trending'],
+        genres: ['Volunteering', 'Social Impact', 'NGO Volunteer Drives'],
+        languages: ['Marathi', 'Hindi', 'English'],
+        formats: ['In-Person (Nashik Riverbank)', 'Free Volunteer Drive'],
+        rating: '4.9★',
+        votesCount: '1.4k volunteers',
+        date: { month: 'SEP', day: '27', fullDate: 'Sep 27, 2026', time: '06:30 AM - 11:00 AM' },
+        venue: 'Godavari Riverbank & Ramkund Ghats',
+        area: 'Godavari Riverbank, Panchavati',
+        city: 'Nashik',
+        fee: 0,
+        feeLabel: 'FREE / CERTIFIED',
+        isHot: true,
+        status: 'Published',
+        bannerUrl: 'https://images.unsplash.com/photo-1559027615-cd4628902d4a?auto=format&fit=crop&w=1200&q=80',
+        posterUrl: 'https://images.unsplash.com/photo-1618477461853-cf6ed80faba5?auto=format&fit=crop&w=600&h=800&q=80',
+        organizer: { name: 'Nashik Youth Green Foundation & NSS', isVerified: true, type: 'NGO' },
+        description: 'Join hands with over 600 college students to clean and restore the sacred Godavari riverbanks, remove plastic waste, and boost water quality awareness with municipal officers.',
+        capacity: 750,
+        registeredCount: 520,
+        isRegistered: false,
+        isSaved: true,
+        whatYouGet: ['Official Certificate by Green Foundation & NSS', '5 Verified Community Service Hours', 'Volunteer Safety Kit & Refreshments']
+      },
+      {
+        id: 'evt-tree-plantation-drive',
+        title: 'Tree Plantation & Environmental Drive',
+        category: 'NGO Drives',
+        districtTab: 'NGO Drives',
+        tags: ['VOLUNTEER', 'CERTIFICATE PROVIDED', 'COMMUNITY HOURS', 'Urban Forestry'],
+        genres: ['Volunteering', 'Social Impact', 'NGO Volunteer Drives'],
+        languages: ['Marathi', 'Hindi', 'English'],
+        formats: ['In-Person (Gangapur Hills)', 'Free Volunteer Drive'],
+        rating: '4.9★',
+        votesCount: '1.2k volunteers',
+        date: { month: 'OCT', day: '11', fullDate: 'Oct 11, 2026', time: '07:00 AM - 11:30 AM' },
+        venue: 'Gangapur Road Eco Belt & Anjaneri Foothills',
+        area: 'Gangapur Road, Nashik',
+        city: 'Nashik',
+        fee: 0,
+        feeLabel: 'FREE / CERTIFIED',
+        isHot: true,
+        status: 'Published',
+        bannerUrl: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=1200&q=80',
+        posterUrl: 'https://images.unsplash.com/photo-1588880331179-bc9b93a8cb5e?auto=format&fit=crop&w=600&h=800&q=80',
+        organizer: { name: 'Nashik Eco Club & Forestry Alliance', isVerified: true, type: 'NGO' },
+        description: 'Plant 1,500 indigenous fruit and shade saplings to combat soil erosion and boost biodiversity along the Gangapur Road ecological belt.',
+        capacity: 700,
+        registeredCount: 620,
+        isRegistered: false,
+        isSaved: false,
+        whatYouGet: ['Official Environmental Service Certificate', 'Verified Community Hours Badge', 'Sapling GPS Adoption Certificate']
+      },
+      {
+        id: 'evt-genai-bootcamp',
+        title: 'Generative AI & LLM Systems Hands-On Bootcamp',
+        category: 'Workshop',
+        districtTab: 'Workshops',
+        tags: ['Workshop', 'GenAI', 'LLMs', 'Python', 'Trending'],
+        genres: ['Tech', 'Workshop', 'AI'],
+        languages: ['English', 'Hindi'],
+        formats: ['In-Person (Nashik Campus)', 'Hands-on Lab'],
+        rating: '4.9★',
+        votesCount: '890 students',
+        date: { month: 'NOV', day: '05', fullDate: 'Nov 05, 2026', time: '10:00 AM - 04:30 PM' },
+        venue: 'MET BKC CS Seminar Hall, Adgaon',
+        area: 'Adgaon, Nashik',
+        city: 'Nashik',
+        fee: 99,
+        feeLabel: 'Pass: ₹99',
+        isHot: true,
+        status: 'Published',
+        bannerUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80',
+        posterUrl: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=600&h=800&q=80',
+        organizer: { name: 'MET ACM Student Chapter', isVerified: true, type: 'College Club' },
+        description: 'Build RAG pipelines, fine-tune open weights LLMs, and deploy autonomous agentic systems using Python, LangChain, and modern vector databases.',
+        capacity: 250,
+        registeredCount: 230,
+        isRegistered: false,
+        isSaved: true,
+        whatYouGet: ['Hands-on RAG Code Templates', 'Cloud GPU Compute Sandbox Access', 'Verified Workshop Badge']
+      },
+      {
+        id: 'evt-uiux-designathon',
+        title: 'Figma to Code: Civic Tech UI/UX Designathon',
+        category: 'Workshop',
+        districtTab: 'Workshops',
+        tags: ['Hackathon', 'Design', 'Figma', 'UI/UX'],
+        genres: ['Tech', 'Workshop', 'Hackathon'],
+        languages: ['English', 'Hindi'],
+        formats: ['In-Person (Nashik Campus)', 'Hands-on Lab'],
+        rating: '4.8★',
+        votesCount: '410 designers',
+        date: { month: 'DEC', day: '10', fullDate: 'Dec 10, 2026', time: '01:00 PM - 07:00 PM' },
+        venue: 'Innov8 Coworking Lab, College Road',
+        area: 'College Road, Nashik',
+        city: 'Nashik',
+        fee: 99,
+        feeLabel: 'Pass: ₹99',
+        isHot: false,
+        status: 'Published',
+        bannerUrl: 'https://images.unsplash.com/photo-1581291518655-9523c932edcf?auto=format&fit=crop&w=1200&q=80',
+        posterUrl: 'https://images.unsplash.com/photo-1541462608143-67571c6738dd?auto=format&fit=crop&w=600&h=800&q=80',
+        organizer: { name: 'Designers of Nashik', isVerified: true, type: 'College Club' },
+        description: 'Learn modern design systems in Figma, component tokens, user empathy mapping, and transforming mockups into production React Tailwind components.',
+        capacity: 120,
+        registeredCount: 110,
+        isRegistered: true,
+        ticketId: 'TKT-3129-DSG',
+        isSaved: false,
+        whatYouGet: ['Figma Pro Design UI Kit', 'Tailwind Conversion Cheatsheet', 'Certificate of Completion']
+      }
+    ];
+
+    const INITIAL_PASSES = {
+      'TKT-8492-XYS': {
+        ticketId: 'TKT-8492-XYS',
+        eventId: 'evt-techsprint-2026',
+        eventTitle: 'Nashik TechSprint 2026: 24-Hour AI & Web3 Hackathon',
+        category: 'Hackathons',
+        venue: 'KKWIEER Main Auditorium, Panchavati',
+        labAllotment: 'CS Lab 304 & Auditorium Terminal Hub',
+        collegeName: 'MET Bhujbal Knowledge City, Adgaon, Nashik',
+        date: 'Oct 12, 2026',
+        time: '09:00 AM',
+        reportingTime: '08:15 AM Sharp (Gate 1)',
+        tier: 'STUDENT HACKER PASS',
+        attendeeName: 'Siddhi Lawte',
+        collegeId: '22BCE104',
+        studentPrn: '22BCE104',
+        studentEmail: 'siddhi.lawte@met.edu.in',
+        department: 'Computer Engineering',
+        status: 'Valid',
+        amountPaid: 0,
+        issuedAt: '2026-08-20T10:30:00Z',
+      },
+      'TKT-3129-DSG': {
+        ticketId: 'TKT-3129-DSG',
+        eventId: 'evt-uiux-designathon',
+        eventTitle: 'Figma to Code: Civic Tech UI/UX Designathon',
+        category: 'Workshops',
+        venue: 'Innov8 Coworking Lab, College Road',
+        labAllotment: 'Design Studio 2 (2nd Floor)',
+        collegeName: 'MET Bhujbal Knowledge City, Adgaon, Nashik',
+        date: 'Dec 10, 2026',
+        time: '01:00 PM',
+        reportingTime: '12:30 PM (Desk B)',
+        tier: 'STANDARD LAB PASS',
+        attendeeName: 'Siddhi Lawte',
+        collegeId: '22BCE104',
+        studentPrn: '22BCE104',
+        studentEmail: 'siddhi.lawte@met.edu.in',
+        department: 'Computer Engineering',
+        status: 'Valid',
+        amountPaid: 99,
+        issuedAt: '2026-08-21T14:15:00Z',
+      }
+    };
+
+    const INITIAL_CLUBS = [
+      {
+        id: 'club-coders-hub',
+        name: 'Nashik Coders Hub',
+        category: 'Coding & Dev',
+        membersCount: 1420,
+        description: 'Premier student developer community across Nashik engineering colleges. Weekly coding sprints, hackathon teams, and mentorship.',
+        logoUrl: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=120&q=80',
+        college: 'City-wide (KKWIEER / NDMVPS / MET)',
+        recentActivity: 'Posted a new challenge: "Algorithm Optimization Mini-Hack"',
+        recentActivityTime: '2 hours ago',
+      },
+      {
+        id: 'club-robotics',
+        name: 'Robotics Society',
+        category: 'Robotics & AI',
+        membersCount: 860,
+        description: 'Building autonomous rovers, drones, and combat bots for Robocon and national robotics competitions.',
+        logoUrl: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=120&q=80',
+        college: 'KKWIEER Campus',
+        recentActivity: 'Uploaded resources from last week’s embedded systems lecture',
+        recentActivityTime: '5 hours ago',
+      },
+      {
+        id: 'club-rotaract',
+        name: 'Rotaract Club of Nashik Youth',
+        category: 'Social & NGO',
+        membersCount: 1100,
+        description: 'Empowering youth through community service, blood donation drives, Godavari cleaning drives, and educational charity.',
+        logoUrl: 'https://images.unsplash.com/photo-1559027615-cd4628902d4a?auto=format&fit=crop&w=120&q=80',
+        college: 'Inter-College Nashik',
+        recentActivity: 'Announced Godavari River Cleanup Drive for next Sunday',
+        recentActivityTime: '2 days ago',
+      }
+    ];
+
+    const INITIAL_UPDATES = [
+      {
+        id: 'upd-1',
+        clubName: 'Nashik Coders Hub',
+        clubIcon: 'code',
+        clubColor: 'text-violet-400 bg-violet-500/15 border-violet-400/30',
+        text: 'posted a new challenge: "Algorithm Optimization Mini-Hack".',
+        timeAgo: '2 hours ago',
+      },
+      {
+        id: 'upd-2',
+        clubName: 'Robotics Society',
+        clubIcon: 'wrench',
+        clubColor: 'text-purple-400 bg-purple-500/15 border-purple-400/30',
+        text: "uploaded resources from last week's embedded systems lecture.",
+        timeAgo: '5 hours ago',
+      },
+      {
+        id: 'upd-3',
+        clubName: 'Rotaract Club of Nashik Youth',
+        clubIcon: 'heartHand',
+        clubColor: 'text-emerald-400 bg-emerald-500/15 border-emerald-400/30',
+        text: 'opened volunteer registrations for Godavari River Cleanup Drive.',
+        timeAgo: '1 day ago',
+      }
+    ];
+
+    // --- MAIN REACT APPLICATION COMPONENT ---
+    function App() {
+      const [currentPage, setCurrentPage] = useState('landing');
+      const [currentLocation, setCurrentLocation] = useState('Nashik');
+      const [districtTab, setDistrictTab] = useState('Explore');
+      const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+      
+      const [userProfile, setUserProfile] = useState({
+        id: 'usr-siddhi',
+        name: 'Siddhi Lawte',
+        email: 'siddhi.lawte@met.edu.in',
+        role: 'student',
+        college: 'MET Bhujbal Knowledge City, Adgaon, Nashik',
+        department: 'Computer Engineering',
+        prn: '22BCE104',
+        studentId: '22BCE104',
+        isLoggedIn: true,
+        myPasses: ['TKT-8492-XYS', 'TKT-3129-DSG']
+      });
+
+      const [events, setEvents] = useState(INITIAL_EVENTS);
+      const [passes, setPasses] = useState(INITIAL_PASSES);
+      const [clubs, setClubs] = useState(INITIAL_CLUBS);
+      const [updates, setUpdates] = useState(INITIAL_UPDATES);
+
+      // Modals
+      const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
+      const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+      const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+      const [authDefaultRole, setAuthDefaultRole] = useState('student');
+      const [isCreateEventOpen, setIsCreateEventOpen] = useState(false);
+      const [isGateScannerOpen, setIsGateScannerOpen] = useState(false);
+      const [isFilterOpen, setIsFilterOpen] = useState(false);
+      const [selectedPass, setSelectedPass] = useState(null);
+      const [selectedEvent, setSelectedEvent] = useState(null);
+      const [quickRegisterEvent, setQuickRegisterEvent] = useState(null);
+      const [toastMessage, setToastMessage] = useState(null);
+      const [searchQuery, setSearchQuery] = useState('');
+
+      // Auth Modal internal form states
+      const [authTab, setAuthTab] = useState('student');
+      const [authStudentName, setAuthStudentName] = useState('Siddhi Lawte');
+      const [authStudentEmail, setAuthStudentEmail] = useState('siddhi.lawte@met.edu.in');
+      const [authStudentCollege, setAuthStudentCollege] = useState(PREMIER_COLLEGES[0]);
+      const [authStudentDept, setAuthStudentDept] = useState('Computer Engineering');
+      const [authOrgEmail, setAuthOrgEmail] = useState('organizers@techsprint2026.org');
+      const [authOrgPasskey, setAuthOrgPasskey] = useState('password123');
+      const [showOrgPasskey, setShowOrgPasskey] = useState(false);
+      const [authError, setAuthError] = useState('');
+
+      // Slide-over filter criteria
+      const [activeFilters, setActiveFilters] = useState({
+        genres: [],
+        languages: [],
+        formats: [],
+        priceRange: 'all'
+      });
+
+      const showToast = (msg) => {
+        setToastMessage(msg);
+        setTimeout(() => setToastMessage(null), 3500);
+      };
+
+      const navigateTo = (page) => {
+        setCurrentPage(page);
+        setShowProfileDropdown(false);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      };
+
+      const handleOpenAuthModal = (role = 'student') => {
+        setAuthDefaultRole(role);
+        setAuthTab(role);
+        setAuthError('');
+        setIsAuthModalOpen(true);
+      };
+
+      const handleAuthSuccess = (profile) => {
+        setUserProfile(profile);
+        setIsAuthModalOpen(false);
+        setShowProfileDropdown(false);
+        setAuthError('');
+
+        if (window.confetti) {
+          window.confetti({ particleCount: 75, spread: 65, origin: { y: 0.6 }, colors: ['#7C3AED', '#6D28D9', '#8B5CF6', '#10B981'] });
+        }
+
+        if (profile.role === 'organizer') {
+          showToast(`Welcome to Organizer Hub, ${profile.name}!`);
+          navigateTo('organizer_dashboard');
+        } else {
+          showToast(`Welcome back, ${profile.name}!`);
+          navigateTo('student_dashboard');
+        }
+      };
+
+      const handleLogout = () => {
+        setUserProfile(null);
+        setShowProfileDropdown(false);
+        showToast('Signed out successfully.');
+        navigateTo('landing');
+      };
+
+      const handleStudentAuthSubmit = (e) => {
+        e.preventDefault();
+        if (!authStudentName.trim() || !authStudentEmail.trim()) {
+          setAuthError('Please fill in your name and email address.');
+          return;
+        }
+        if (!authStudentEmail.includes('@') || !authStudentEmail.includes('.')) {
+          setAuthError('Please enter a valid college email address.');
+          return;
+        }
+
+        const profile = {
+          id: `usr-std-${Date.now()}`,
+          name: authStudentName.trim(),
+          email: authStudentEmail.trim().toLowerCase(),
+          role: 'student',
+          college: authStudentCollege,
+          department: authStudentDept || 'Computer Engineering',
+          prn: '22BCE104',
+          studentId: '22BCE104',
+          isLoggedIn: true,
+          myPasses: ['TKT-8492-XYS', 'TKT-3129-DSG']
+        };
+        handleAuthSuccess(profile);
+      };
+
+      const handleOrgAuthSubmit = (e) => {
+        e.preventDefault();
+        if (!authOrgEmail.trim()) {
+          setAuthError('Please enter your Chapter / Organizer Email.');
+          return;
+        }
+        if (!authOrgPasskey.trim()) {
+          setAuthError('Please enter your Security Passkey.');
+          return;
+        }
+
+        const profile = {
+          id: `usr-org-${Date.now()}`,
+          name: 'Nashik Tech Committee & IEEE',
+          email: authOrgEmail.trim().toLowerCase(),
+          role: 'organizer',
+          college: 'KKWIEER Campus',
+          clubName: 'Nashik Coders Hub & IEEE Student Branch',
+          department: 'Technical Council',
+          isLoggedIn: true,
+        };
+        handleAuthSuccess(profile);
+      };
+
+      const handleQuickRegisterConfirm = (event, studentData) => {
+        const effectivePrn = studentData.prn || userProfile?.prn || '22BCE104';
+        const ticketId = `YC-2026-TK-${Math.floor(1000 + Math.random() * 9000)}`;
+
+        const newPass = {
+          ticketId,
+          eventId: event.id,
+          eventTitle: event.title,
+          category: event.category || 'Workshop',
+          venue: event.venue,
+          labAllotment: 'CS Lab 204 (Wing B)',
+          collegeName: studentData.college || 'MET Bhujbal Knowledge City, Adgaon, Nashik',
+          date: event.date.fullDate,
+          time: event.date.time.split('-')[0].trim(),
+          reportingTime: `${event.date.time.split('-')[0].trim()} (Gate 1 Reporting)`,
+          tier: event.fee > 0 ? 'VIP ACCESS PASS' : 'STUDENT CONFIRMED PASS',
+          attendeeName: studentData.name,
+          collegeId: effectivePrn,
+          studentPrn: effectivePrn,
+          studentEmail: studentData.email,
+          department: studentData.department,
+          status: 'Valid',
+          amountPaid: event.fee,
+          issuedAt: new Date().toISOString()
+        };
+
+        setPasses(prev => ({ ...prev, [ticketId]: newPass }));
+        setEvents(prev => prev.map(e => e.id === event.id ? { ...e, isRegistered: true, registeredCount: e.registeredCount + 1, ticketId } : e));
+        
+        if (userProfile) {
+          setUserProfile(prev => ({ ...prev, myPasses: [...(prev.myPasses || []), ticketId] }));
+        }
+
+        setQuickRegisterEvent(null);
+        showToast(`🎉 Pass ${ticketId} issued to PRN ${effectivePrn}!`);
+
+        if (window.confetti) {
+          window.confetti({ particleCount: 75, spread: 60, origin: { y: 0.6 }, colors: ['#7C6BA6', '#8B7CB6', '#10B981'] });
+        }
+
+        setTimeout(() => navigateTo('student_dashboard'), 400);
+      };
+
+      const handleToggleSave = (eventId) => {
+        setEvents(prev => prev.map(e => e.id === eventId ? { ...e, isSaved: !e.isSaved } : e));
+        const ev = events.find(e => e.id === eventId);
+        showToast(ev?.isSaved ? 'Removed from saved bookmarks' : 'Saved to your bookmarks!');
+      };
+
+      const handleRedeemPass = (ticketId) => {
+        const target = passes[ticketId];
+        if (!target) return showToast('Error: Pass ID not found in registry');
+        if (target.status === 'Redeemed') return showToast(`Warning: Ticket ${ticketId} has ALREADY been redeemed!`);
+
+        setPasses(prev => ({
+          ...prev,
+          [ticketId]: { ...target, status: 'Redeemed', redeemedAt: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }
+        }));
+        showToast(`Pass ${ticketId} verified! Gate check-in complete.`);
+      };
+
+      const handleCreateEvent = (newEvent) => {
+        setEvents(prev => [newEvent, ...prev]);
+        showToast(`Event "${newEvent.title}" published to campus feed!`);
+        setIsCreateEventOpen(false);
+      };
+
+      // Filtered events
+      const filteredEvents = useMemo(() => {
+        return events.filter(evt => {
+          if (districtTab !== 'Explore') {
+            if (districtTab === 'Hackathons' && evt.category !== 'Hackathon') return false;
+            if (districtTab === 'College Fests' && evt.category !== 'Cultural') return false;
+            if (districtTab === 'NGO Drives' && evt.category !== 'NGO Drives') return false;
+            if (districtTab === 'Workshops' && evt.category !== 'Workshop') return false;
+          }
+          if (activeFilters.priceRange === 'free' && evt.fee !== 0) return false;
+          if (activeFilters.priceRange === 'under500' && (evt.fee === 0 || evt.fee > 200)) return false;
+          if (activeFilters.genres.length > 0 && !activeFilters.genres.includes(evt.category) && !evt.genres?.some(g => activeFilters.genres.includes(g))) return false;
+          if (searchQuery.trim()) {
+            const q = searchQuery.toLowerCase();
+            const match = evt.title.toLowerCase().includes(q) || evt.venue.toLowerCase().includes(q) || evt.category.toLowerCase().includes(q);
+            if (!match) return false;
+          }
+          return true;
+        });
+      }, [events, districtTab, activeFilters, searchQuery]);
+
+      const registeredPassList = Object.values(passes);
+
+      return (
+        <div className="min-h-screen relative flex flex-col font-serif selection:bg-[#8B7CB6]/40 selection:text-white">
+          <FluidBackground />
+
+          {/* NAVBAR */}
+          <header className="fixed top-0 left-0 right-0 z-40 px-3 sm:px-6 pt-3 pointer-events-none">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2.5 rounded-2xl glass-panel-3d flex items-center justify-between gap-3 text-white pointer-events-auto relative">
+              
+              {/* Brand Logo */}
+              <div className="flex items-center gap-3 shrink-0">
+                <button onClick={() => navigateTo('landing')} className="flex items-center gap-2.5 group text-left cursor-pointer">
+                  <div className="relative w-8 h-8 rounded-xl bg-purple-500/20 border border-purple-300/40 p-1 flex items-center justify-center shadow-[0_0_15px_rgba(139,124,182,0.35)] group-hover:scale-105 transition-transform text-white">
+                    <YouthConnectLogo className="w-full h-full text-white" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="font-bold text-base sm:text-lg tracking-tight text-white leading-tight">
+                      Youth<span className="text-[#8B7CB6]">Connect</span>
+                    </span>
+                    <span className="text-[8px] sm:text-[9px] font-semibold tracking-widest text-purple-200 uppercase -mt-0.5">
+                      CAMPUS HUB
+                    </span>
+                  </div>
+                </button>
+
+                {/* Location Picker */}
+                <button 
+                  onClick={() => setIsLocationModalOpen(true)}
+                  className="hidden md:flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white/10 hover:bg-white/15 border border-white/20 text-xs font-semibold text-purple-200 transition-colors cursor-pointer"
+                >
+                  <Icon name="mapPin" className="w-3.5 h-3.5 text-pink-300" />
+                  <span>{currentLocation} Hub</span>
+                  <Icon name="chevronDown" className="w-3 h-3 text-stone-300" />
+                </button>
+              </div>
+
+              {/* District Navigation Tabs */}
+              <nav className="hidden lg:flex items-center gap-1 bg-white/[0.06] p-1 rounded-xl border border-white/15">
+                {['Explore', 'Hackathons', 'College Fests', 'NGO Drives', 'Workshops', 'Campus Clubs', 'My Passes'].map(tab => {
+                  const isActive = (tab === 'Campus Clubs' && currentPage === 'communities') ||
+                    (tab === 'My Passes' && currentPage === 'student_dashboard') ||
+                    (currentPage === 'explore' && districtTab === tab) ||
+                    (currentPage === 'landing' && tab === 'Explore' && districtTab === 'Explore');
+                  return (
+                    <button
+                      key={tab}
+                      onClick={() => {
+                        if (tab === 'Campus Clubs') navigateTo('communities');
+                        else if (tab === 'My Passes') navigateTo('student_dashboard');
+                        else {
+                          setDistrictTab(tab);
+                          navigateTo('explore');
+                        }
+                      }}
+                      className={`px-3 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer ${
+                        isActive ? 'glass-pill-active text-white font-bold' : 'text-stone-300 hover:text-white hover:bg-white/10'
+                      }`}
+                    >
+                      {tab}
+                    </button>
+                  );
+                })}
+              </nav>
+
+              {/* Right Action Controls */}
+              <div className="flex items-center gap-2 relative">
+                {/* Search trigger */}
+                <button 
+                  onClick={() => setIsSearchModalOpen(true)}
+                  className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-stone-200 hover:text-white border border-white/20 transition-colors cursor-pointer"
+                  title="Search events"
+                >
+                  <Icon name="search" className="w-4 h-4" />
+                </button>
+
+                {/* Organizer Hub button */}
+                <button
+                  onClick={() => {
+                    if (userProfile?.role === 'organizer') {
+                      navigateTo('organizer_dashboard');
+                    } else {
+                      handleOpenAuthModal('organizer');
+                    }
+                  }}
+                  className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-900/40 hover:bg-purple-900/60 border border-purple-400/30 text-xs font-semibold text-purple-200 transition-colors cursor-pointer"
+                >
+                  <Icon name="lock" className="w-3.5 h-3.5 text-pink-300" />
+                  <span>Organizer Gate</span>
+                </button>
+
+                {/* Student Login / Profile badge & Dropdown */}
+                {userProfile?.isLoggedIn ? (
+                  <div className="relative">
+                    <button
+                      onClick={() => setShowProfileDropdown(p => !p)}
+                      className="flex items-center gap-2 p-1 pl-2.5 rounded-xl bg-white/15 border border-white/25 hover:bg-white/20 transition-colors cursor-pointer"
+                    >
+                      <span className="text-xs font-bold text-white hidden sm:inline">{userProfile.name.split(' ')[0]}</span>
+                      <span className="w-6 h-6 rounded-lg bg-gradient-to-tr from-pink-500 to-purple-600 text-[11px] font-bold flex items-center justify-center text-white shadow-xs">
+                        {userProfile.name[0]}
+                      </span>
+                      <Icon name="chevronDown" className="w-3 h-3 text-purple-300" />
+                    </button>
+
+                    {/* Profile Dropdown Menu */}
+                    {showProfileDropdown && (
+                      <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-[#181126]/95 border border-white/25 shadow-2xl p-2.5 backdrop-blur-2xl z-50 animate-in fade-in zoom-in-95 text-xs">
+                        <div className="p-2 border-b border-white/15 mb-1.5">
+                          <span className="font-bold text-white block text-sm">{userProfile.name}</span>
+                          <span className="text-[11px] text-purple-300 font-mono block">{userProfile.prn || '22BCE104'}</span>
+                          <span className="text-[10px] text-stone-400 block mt-0.5 truncate">{userProfile.college}</span>
+                        </div>
+
+                        <button
+                          onClick={() => navigateTo('student_dashboard')}
+                          className="w-full p-2 rounded-xl hover:bg-white/10 text-stone-200 hover:text-white flex items-center gap-2 transition-colors cursor-pointer"
+                        >
+                          <Icon name="ticket" className="w-4 h-4 text-pink-300" />
+                          <span>My Digital Entry Passes ({registeredPassList.length})</span>
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            if (userProfile.role === 'organizer') {
+                              navigateTo('organizer_dashboard');
+                            } else {
+                              handleOpenAuthModal('organizer');
+                            }
+                          }}
+                          className="w-full p-2 rounded-xl hover:bg-white/10 text-stone-200 hover:text-white flex items-center gap-2 transition-colors cursor-pointer"
+                        >
+                          <Icon name="lock" className="w-4 h-4 text-purple-400" />
+                          <span>Organizer Hub Command Center</span>
+                        </button>
+
+                        <div className="border-t border-white/15 my-1.5" />
+
+                        <button
+                          onClick={handleLogout}
+                          className="w-full p-2 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 flex items-center gap-2 transition-colors cursor-pointer font-bold"
+                        >
+                          <Icon name="logout" className="w-4 h-4 text-rose-400" />
+                          <span>Sign Out</span>
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => handleOpenAuthModal('student')}
+                    className="px-4 py-1.5 rounded-xl bg-gradient-to-r from-[#8B7CB6] to-pink-500 hover:from-[#7C6BA6] hover:to-pink-600 text-white text-xs font-bold shadow-md transition-all cursor-pointer"
+                  >
+                    Sign In
+                  </button>
+                )}
+              </div>
+            </div>
+          </header>
+
+          {/* MAIN PAGE ROUTER */}
+          <main className="flex-1 w-full pt-20">
+            
+            {/* PAGE 1: LANDING */}
+            {currentPage === 'landing' && (
+              <div className="w-full text-white">
+                <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-14 pb-12 text-center">
+                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/25 shadow-lg backdrop-blur-xl mb-6">
+                    <span className="flex h-2 w-2 relative">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-pink-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-pink-400"></span>
+                    </span>
+                    <span className="text-xs font-semibold uppercase tracking-wider text-pink-200">
+                      YouthConnect — Hyperlocal Collegiate Campus Hub
+                    </span>
+                  </div>
+
+                  <h1 className="text-4xl sm:text-5.5xl md:text-6xl font-bold tracking-tight text-white max-w-4xl mx-auto leading-[1.12] drop-shadow-lg">
+                    Your Campus Life,{' '}
+                    <span className="bg-gradient-to-r from-pink-300 via-purple-200 to-indigo-300 bg-clip-text text-transparent">
+                      Unified in One Hub.
+                    </span>
+                  </h1>
+
+                  <p className="mt-4 text-base sm:text-lg text-purple-100 max-w-2xl mx-auto font-normal leading-relaxed drop-shadow-sm">
+                    Discover collegiate hackathons, cultural fests, certified NGO volunteering drives, and hands-on workshops across colleges with instant digital QR passes & verified credentials.
+                  </p>
+
+                  <div className="mt-8 flex items-center justify-center gap-3 max-w-md mx-auto">
+                    <button
+                      onClick={() => navigateTo('explore')}
+                      className="px-8 py-3.5 rounded-full text-xs sm:text-sm font-bold text-white bg-gradient-to-r from-[#8B7CB6] via-purple-500 to-pink-500 hover:from-[#7C6BA6] hover:to-pink-600 transition-all shadow-[0_0_25px_rgba(236,72,153,0.4)] border border-pink-200/60 flex items-center gap-2 cursor-pointer"
+                    >
+                      <span>Explore Campus Events</span>
+                      <Icon name="arrowRight" className="w-4 h-4" />
+                    </button>
+                  </div>
+
+                  {/* Stat Pillars */}
+                  <div className="mt-12 max-w-3.5xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 rounded-3xl glass-panel-3d">
+                    <div className="p-2.5 text-center border-r border-white/15">
+                      <span className="block text-2xl sm:text-3xl font-bold text-pink-300">50,000+</span>
+                      <span className="text-xs text-stone-200">Verified Students</span>
+                    </div>
+                    <div className="p-2.5 text-center sm:border-r border-white/15">
+                      <span className="block text-2xl sm:text-3xl font-bold text-white">140+</span>
+                      <span className="text-xs text-stone-200">Hackathons & Fests</span>
+                    </div>
+                    <div className="p-2.5 text-center border-r border-white/15">
+                      <span className="block text-2xl sm:text-3xl font-bold text-emerald-300">65+</span>
+                      <span className="text-xs text-stone-200">NGO Drives & Credits</span>
+                    </div>
+                    <div className="p-2.5 text-center">
+                      <span className="block text-2xl sm:text-3xl font-bold text-amber-300">₹25L+</span>
+                      <span className="text-xs text-stone-200">Prize Pools & Grants</span>
+                    </div>
+                  </div>
+                </section>
+
+                {/* 4 Core Focus Domain Modules */}
+                <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                  <div className="text-center mb-7">
+                    <h2 className="text-xs font-semibold uppercase tracking-wider text-pink-300 mb-1">
+                      Hyperlocal Discovery Rails
+                    </h2>
+                    <h3 className="text-2xl sm:text-3xl font-bold text-white">
+                      Curated Exclusively for College Campuses
+                    </h3>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    {[
+                      { icon: 'code', title: 'Hackathons & Sprints', desc: '24h-48h coding hackathons, Web3 & AI tracks with verified prize pools and internships.', tab: 'Hackathons', color: 'text-amber-300 bg-amber-500/20 border-amber-300/40' },
+                      { icon: 'party', title: 'College Cultural Fests', desc: 'Battle of bands, street theatre, dance showcases, inter-collegiate exhibitions, and live concerts.', tab: 'College Fests', color: 'text-rose-300 bg-rose-500/20 border-rose-300/40' },
+                      { icon: 'heartHand', title: 'Certified NGO Drives', desc: 'River cleanups, blood donation, rural teaching drives with verified community credits.', tab: 'NGO Drives', color: 'text-emerald-300 bg-emerald-500/20 border-emerald-300/40' },
+                      { icon: 'wrench', title: 'Technical Workshops', desc: 'Hands-on technical labs: LLM engineering, cloud architecture, drone fabrication & Figma UX.', tab: 'Workshops', color: 'text-blue-300 bg-blue-500/20 border-blue-300/40' },
+                    ].map(d => (
+                      <div 
+                        key={d.title}
+                        onClick={() => { setDistrictTab(d.tab); navigateTo('explore'); }}
+                        className="p-5 rounded-3xl glass-panel-3d hover:border-pink-300/60 shadow-lg hover:shadow-[0_0_25px_rgba(236,72,153,0.3)] transition-all cursor-pointer group flex flex-col justify-between"
+                      >
+                        <div>
+                          <div className={`w-10 h-10 rounded-2xl border flex items-center justify-center mb-3 group-hover:scale-105 transition-transform ${d.color}`}>
+                            <Icon name={d.icon} className="w-5 h-5" />
+                          </div>
+                          <h4 className="font-bold text-white text-base group-hover:text-pink-300 transition-colors">
+                            {d.title}
+                          </h4>
+                          <p className="text-xs text-stone-300 mt-1.5 leading-relaxed">
+                            {d.desc}
+                          </p>
+                        </div>
+                        <div className="mt-4 flex items-center justify-between text-xs font-semibold text-pink-300">
+                          <span>Browse {d.tab}</span>
+                          <Icon name="arrowRight" className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+
+                {/* Featured Showcase Events */}
+                <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                  <div className="flex items-center justify-between mb-6">
+                    <div>
+                      <h3 className="text-2xl font-bold text-white">Trending Campus Events</h3>
+                      <p className="text-xs text-purple-200 mt-0.5">High-energy hackathons, fests, and drives happening this month</p>
+                    </div>
+                    <button 
+                      onClick={() => navigateTo('explore')}
+                      className="text-xs font-semibold text-pink-300 hover:text-white flex items-center gap-1 transition-colors cursor-pointer"
+                    >
+                      <span>View All Events</span>
+                      <Icon name="arrowRight" className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {events.slice(0, 3).map(evt => (
+                      <div 
+                        key={evt.id}
+                        className="rounded-3xl glass-panel-3d overflow-hidden flex flex-col justify-between group hover:border-pink-300/50 transition-all shadow-xl"
+                      >
+                        <div className="relative h-48 overflow-hidden">
+                          <img src={evt.bannerUrl} alt={evt.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-[#070913] via-transparent to-black/30" />
+                          <span className="absolute top-3 left-3 px-2.5 py-0.5 rounded-full bg-black/60 backdrop-blur-md text-[11px] font-semibold text-pink-300 border border-pink-300/30">
+                            {evt.category}
+                          </span>
+                          <span className="absolute top-3 right-3 px-2.5 py-0.5 rounded-full bg-black/60 backdrop-blur-md text-[11px] font-bold text-emerald-300 border border-emerald-300/30">
+                            {evt.fee === 0 ? 'FREE' : `₹${evt.fee}`}
+                          </span>
+                        </div>
+
+                        <div className="p-5 flex-1 flex flex-col justify-between">
+                          <div>
+                            <div className="flex items-center gap-2 text-xs text-purple-200 mb-1">
+                              <span>{evt.organizer.name}</span>
+                              {evt.organizer.isVerified && <Icon name="shieldCheck" className="w-3.5 h-3.5 text-emerald-400" />}
+                            </div>
+                            <h4 className="font-bold text-white text-base leading-snug group-hover:text-pink-300 transition-colors">
+                              {evt.title}
+                            </h4>
+                            <p className="text-xs text-stone-300 mt-2 line-clamp-2 leading-relaxed">
+                              {evt.description}
+                            </p>
+                          </div>
+
+                          <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs">
+                            <div className="flex items-center gap-1.5 text-stone-300">
+                              <Icon name="calendar" className="w-3.5 h-3.5 text-pink-300" />
+                              <span>{evt.date.fullDate}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <button
+                                onClick={() => setSelectedEvent(evt)}
+                                className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-medium text-xs transition-colors cursor-pointer"
+                              >
+                                Details
+                              </button>
+                              <button
+                                onClick={() => setQuickRegisterEvent(evt)}
+                                className="px-3.5 py-1.5 rounded-xl bg-[#8B7CB6] hover:bg-[#7C6BA6] text-white font-bold text-xs shadow-md transition-all cursor-pointer"
+                              >
+                                Register
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              </div>
+            )}
+
+            {/* PAGE 2: EXPLORE */}
+            {currentPage === 'explore' && (
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+                
+                {/* Search & Filter Header Bar */}
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-3xl glass-panel-3d">
+                  <div className="relative w-full sm:max-w-md">
+                    <Icon name="search" className="w-4 h-4 text-purple-300 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={e => setSearchQuery(e.target.value)}
+                      placeholder="Search hackathons, fests, workshops..."
+                      className="w-full pl-10 pr-4 py-2 rounded-2xl bg-white/10 border border-white/20 text-xs text-white placeholder-purple-200 focus:outline-none focus:border-pink-300"
+                    />
+                  </div>
+
+                  <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
+                    <button
+                      onClick={() => setIsFilterOpen(true)}
+                      className="flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/20 text-xs font-semibold text-white transition-colors cursor-pointer"
+                    >
+                      <Icon name="sliders" className="w-3.5 h-3.5 text-pink-300" />
+                      <span>Filter Options</span>
+                      {(activeFilters.genres.length > 0 || activeFilters.priceRange !== 'all') && (
+                        <span className="w-2 h-2 rounded-full bg-pink-400 animate-pulse" />
+                      )}
+                    </button>
+
+                    <span className="text-xs text-purple-200 font-medium">
+                      Showing <strong className="text-white">{filteredEvents.length}</strong> events
+                    </span>
+                  </div>
+                </div>
+
+                {/* Event Category Tabs */}
+                <div className="flex flex-wrap gap-2">
+                  {['Explore', 'Hackathons', 'College Fests', 'NGO Drives', 'Workshops'].map(tab => (
+                    <button
+                      key={tab}
+                      onClick={() => setDistrictTab(tab)}
+                      className={`px-4 py-2 rounded-2xl text-xs font-bold transition-all cursor-pointer ${
+                        districtTab === tab
+                          ? 'bg-gradient-to-r from-[#8B7CB6] to-pink-500 text-white shadow-lg shadow-purple-900/30 border border-pink-200/50'
+                          : 'glass-panel-3d text-stone-300 hover:text-white hover:bg-white/15'
+                      }`}
+                    >
+                      {tab}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Events Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {filteredEvents.map(evt => (
+                    <div 
+                      key={evt.id}
+                      className="rounded-3xl glass-panel-3d overflow-hidden flex flex-col justify-between group hover:border-pink-300/50 transition-all shadow-xl"
+                    >
+                      <div className="relative h-48 overflow-hidden">
+                        <img src={evt.bannerUrl} alt={evt.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#070913] via-transparent to-black/30" />
+                        <span className="absolute top-3 left-3 px-2.5 py-0.5 rounded-full bg-black/60 backdrop-blur-md text-[11px] font-semibold text-pink-300 border border-pink-300/30">
+                          {evt.category}
+                        </span>
+                        <div className="absolute top-3 right-3 flex items-center gap-1.5">
+                          <button
+                            onClick={() => handleToggleSave(evt.id)}
+                            className="p-1.5 rounded-full bg-black/60 text-white hover:text-pink-400 transition-colors backdrop-blur-md cursor-pointer"
+                          >
+                            <Icon name="heart" className={`w-3.5 h-3.5 ${evt.isSaved ? 'text-pink-500 fill-pink-500' : ''}`} />
+                          </button>
+                          <span className="px-2.5 py-0.5 rounded-full bg-black/60 backdrop-blur-md text-[11px] font-bold text-emerald-300 border border-emerald-300/30">
+                            {evt.fee === 0 ? 'FREE' : `₹${evt.fee}`}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="p-5 flex-1 flex flex-col justify-between">
+                        <div>
+                          <div className="flex items-center gap-2 text-xs text-purple-200 mb-1">
+                            <span>{evt.organizer.name}</span>
+                            {evt.organizer.isVerified && <Icon name="shieldCheck" className="w-3.5 h-3.5 text-emerald-400" />}
+                          </div>
+                          <h4 className="font-bold text-white text-base leading-snug group-hover:text-pink-300 transition-colors">
+                            {evt.title}
+                          </h4>
+                          <p className="text-xs text-stone-300 mt-2 line-clamp-2 leading-relaxed">
+                            {evt.description}
+                          </p>
+                          <div className="mt-3 flex items-center gap-1.5 text-xs text-purple-200">
+                            <Icon name="mapPin" className="w-3.5 h-3.5 text-pink-300 shrink-0" />
+                            <span className="truncate">{evt.venue}</span>
+                          </div>
+                        </div>
+
+                        <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs">
+                          <div className="flex items-center gap-1.5 text-stone-300">
+                            <Icon name="calendar" className="w-3.5 h-3.5 text-pink-300" />
+                            <span>{evt.date.fullDate}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => setSelectedEvent(evt)}
+                              className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-medium text-xs transition-colors cursor-pointer"
+                            >
+                              Details
+                            </button>
+                            <button
+                              onClick={() => setQuickRegisterEvent(evt)}
+                              className="px-3.5 py-1.5 rounded-xl bg-[#8B7CB6] hover:bg-[#7C6BA6] text-white font-bold text-xs shadow-md transition-all cursor-pointer"
+                            >
+                              {evt.isRegistered ? 'Get Pass' : 'Register'}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* PAGE 3: STUDENT DASHBOARD */}
+            {currentPage === 'student_dashboard' && (
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+                
+                {userProfile?.isLoggedIn ? (
+                  <>
+                    {/* Student Profile Card */}
+                    <div className="p-6 rounded-3xl glass-panel-3d flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                      <div className="flex items-center gap-4">
+                        <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-pink-500 to-purple-600 p-0.5 shadow-xl">
+                          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80" alt="Student" className="w-full h-full object-cover rounded-2xl" />
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <h2 className="text-xl font-bold text-white">{userProfile.name}</h2>
+                            <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-[10px] font-bold">
+                              VERIFIED STUDENT
+                            </span>
+                          </div>
+                          <p className="text-xs text-purple-200 mt-0.5">{userProfile.college}</p>
+                          <div className="flex items-center gap-3 text-xs text-stone-300 mt-1.5">
+                            <span>PRN: <strong className="text-white font-mono">{userProfile.prn}</strong></span>
+                            <span>•</span>
+                            <span>{userProfile.department}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Quick stats */}
+                      <div className="flex items-center gap-4 border-t md:border-t-0 md:border-l border-white/15 pt-4 md:pt-0 md:pl-6 w-full md:w-auto justify-around">
+                        <div className="text-center">
+                          <span className="block text-2xl font-bold text-pink-300">{registeredPassList.length}</span>
+                          <span className="text-[11px] text-stone-300">Active Passes</span>
+                        </div>
+                        <div className="text-center">
+                          <span className="block text-2xl font-bold text-emerald-300">12h</span>
+                          <span className="text-[11px] text-stone-300">Social Credits</span>
+                        </div>
+                        <div className="text-center">
+                          <span className="block text-2xl font-bold text-amber-300">{events.filter(e => e.isSaved).length}</span>
+                          <span className="text-[11px] text-stone-300">Saved Events</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Digital QR Entry Passes Roster */}
+                    <div>
+                      <div className="flex items-center justify-between mb-4">
+                        <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                          <Icon name="ticket" className="w-5 h-5 text-pink-300" />
+                          <span>My Digital Entry Passes</span>
+                        </h3>
+                        <button onClick={() => navigateTo('explore')} className="text-xs font-semibold text-pink-300 hover:text-white cursor-pointer">
+                          + Register More Events
+                        </button>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {registeredPassList.map(pass => (
+                          <div 
+                            key={pass.ticketId}
+                            className="p-5 rounded-3xl glass-panel-3d flex flex-col justify-between border-t-2 border-t-pink-400"
+                          >
+                            <div className="flex items-start justify-between gap-4">
+                              <div>
+                                <span className="px-2.5 py-0.5 rounded-full bg-white/10 text-[10px] font-bold text-pink-300 border border-pink-300/30">
+                                  {pass.tier}
+                                </span>
+                                <h4 className="text-base font-bold text-white mt-2 leading-snug">{pass.eventTitle}</h4>
+                                <p className="text-xs text-purple-200 mt-1 flex items-center gap-1">
+                                  <Icon name="mapPin" className="w-3.5 h-3.5 text-pink-300 shrink-0" />
+                                  <span>{pass.venue}</span>
+                                </p>
+                                <p className="text-xs text-stone-300 mt-1 flex items-center gap-1">
+                                  <Icon name="clock" className="w-3.5 h-3.5 text-purple-300 shrink-0" />
+                                  <span>{pass.date} • {pass.reportingTime || pass.time}</span>
+                                </p>
+                              </div>
+
+                              {/* QR Thumbnail */}
+                              <div 
+                                onClick={() => setSelectedPass(pass)}
+                                className="w-20 h-20 rounded-2xl bg-white p-1.5 shrink-0 border border-purple-200 cursor-pointer shadow-lg hover:scale-105 transition-transform"
+                                title="Click to expand pass"
+                              >
+                                <img 
+                                  src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(pass.ticketId + ' | ' + pass.eventTitle + ' | ' + pass.attendeeName)}`} 
+                                  alt="QR Code" 
+                                  className="w-full h-full object-contain"
+                                />
+                              </div>
+                            </div>
+
+                            <div className="mt-4 pt-3 border-t border-white/15 flex items-center justify-between text-xs">
+                              <span className="font-mono text-purple-200 font-bold bg-white/10 px-2.5 py-1 rounded-lg">
+                                {pass.ticketId}
+                              </span>
+                              <button
+                                onClick={() => setSelectedPass(pass)}
+                                className="px-4 py-1.5 rounded-xl bg-gradient-to-r from-[#8B7CB6] to-pink-500 text-white font-bold text-xs shadow-md cursor-pointer"
+                              >
+                                View Full Pass
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <div className="max-w-md mx-auto my-12 p-8 rounded-3xl glass-panel-3d text-center space-y-4">
+                    <div className="w-14 h-14 rounded-2xl bg-purple-500/20 text-pink-300 flex items-center justify-center mx-auto border border-purple-300/40">
+                      <Icon name="graduation" className="w-7 h-7" />
+                    </div>
+                    <h3 className="text-xl font-bold text-white">Student Portal Access</h3>
+                    <p className="text-xs text-purple-200 leading-relaxed">
+                      Sign in with your verified college credentials to view your digital passes, volunteering credits, and book tickets.
+                    </p>
+                    <button
+                      onClick={() => handleOpenAuthModal('student')}
+                      className="w-full py-3 rounded-xl bg-gradient-to-r from-[#8B7CB6] to-pink-500 text-white font-bold text-xs shadow-lg cursor-pointer"
+                    >
+                      Sign In with College Credentials
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* PAGE 4: ORGANIZER HUB */}
+            {currentPage === 'organizer_dashboard' && (
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+                
+                {userProfile?.isLoggedIn && userProfile.role === 'organizer' ? (
+                  <>
+                    {/* Header & Quick Action Bar */}
+                    <div className="p-6 rounded-3xl glass-panel-3d flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <h2 className="text-2xl font-bold text-white">Organizer Command Center</h2>
+                          <span className="px-2.5 py-0.5 rounded-full bg-purple-500/20 border border-purple-400/30 text-pink-300 text-[10px] font-bold">
+                            {userProfile.clubName || 'MET BKC Chapter'}
+                          </span>
+                        </div>
+                        <p className="text-xs text-purple-200 mt-1">Manage collegiate registrations, gate scanning, and attendee broadcasts</p>
+                      </div>
+
+                      <div className="flex items-center gap-3">
+                        <button
+                          onClick={() => setIsGateScannerOpen(true)}
+                          className="px-4 py-2.5 rounded-2xl bg-purple-900/60 hover:bg-purple-900/80 border border-purple-400/40 text-white text-xs font-bold flex items-center gap-2 transition-all cursor-pointer"
+                        >
+                          <Icon name="camera" className="w-4 h-4 text-pink-300" />
+                          <span>Gate Scanner</span>
+                        </button>
+                        <button
+                          onClick={() => setIsCreateEventOpen(true)}
+                          className="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-[#8B7CB6] to-pink-500 text-white text-xs font-bold flex items-center gap-2 shadow-lg transition-all cursor-pointer"
+                        >
+                          <Icon name="plus" className="w-4 h-4" />
+                          <span>Create New Event</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Organizer KPI cards */}
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                      <div className="p-5 rounded-3xl glass-panel-3d">
+                        <span className="text-xs text-purple-200 block">Total Campus Views</span>
+                        <span className="text-3xl font-bold text-white mt-1 block">45.2K</span>
+                        <span className="text-[11px] text-emerald-400 font-semibold mt-1 block">↑ +12.5% this week</span>
+                      </div>
+                      <div className="p-5 rounded-3xl glass-panel-3d">
+                        <span className="text-xs text-purple-200 block">Total Registrations</span>
+                        <span className="text-3xl font-bold text-pink-300 mt-1 block">3,842</span>
+                        <span className="text-[11px] text-emerald-400 font-semibold mt-1 block">↑ +8.2% conversion</span>
+                      </div>
+                      <div className="p-5 rounded-3xl glass-panel-3d">
+                        <span className="text-xs text-purple-200 block">Avg Engagement Rate</span>
+                        <span className="text-3xl font-bold text-emerald-300 mt-1 block">24.8%</span>
+                        <span className="text-[11px] text-stone-300 font-semibold mt-1 block">400+ attendees/event</span>
+                      </div>
+                      <div className="p-5 rounded-3xl glass-panel-3d">
+                        <span className="text-xs text-purple-200 block">Pass Revenue Reconciled</span>
+                        <span className="text-3xl font-bold text-amber-300 mt-1 block">₹1,84,500</span>
+                        <span className="text-[11px] text-emerald-400 font-semibold mt-1 block">Instant UPI Gateway</span>
+                      </div>
+                    </div>
+
+                    {/* Events Roster */}
+                    <div>
+                      <h3 className="text-lg font-bold text-white mb-4">Published Campus Events</h3>
+                      <div className="space-y-3">
+                        {events.map(evt => (
+                          <div key={evt.id} className="p-4 rounded-2xl glass-panel-3d flex items-center justify-between gap-4">
+                            <div className="flex items-center gap-3 min-w-0">
+                              <img src={evt.posterUrl || evt.bannerUrl} alt={evt.title} className="w-12 h-12 rounded-xl object-cover shrink-0" />
+                              <div className="truncate">
+                                <h4 className="font-bold text-white text-sm truncate">{evt.title}</h4>
+                                <p className="text-xs text-purple-200 mt-0.5">{evt.date.fullDate} • {evt.venue}</p>
+                              </div>
+                            </div>
+
+                            <div className="flex items-center gap-3 shrink-0">
+                              <div className="text-right hidden sm:block">
+                                <span className="block text-xs font-bold text-white">{evt.registeredCount} / {evt.capacity}</span>
+                                <span className="text-[10px] text-purple-200">Registered</span>
+                              </div>
+                              <button
+                                onClick={() => {
+                                  showToast(`Broadcast notification dispatched to ${evt.registeredCount} attendees.`);
+                                }}
+                                className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-purple-200 hover:text-white transition-colors cursor-pointer"
+                                title="Dispatch broadcast"
+                              >
+                                <Icon name="send" className="w-4 h-4" />
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <div className="max-w-md mx-auto my-12 p-8 rounded-3xl glass-panel-3d text-center space-y-4">
+                    <div className="w-14 h-14 rounded-2xl bg-purple-500/20 text-pink-300 flex items-center justify-center mx-auto border border-purple-300/40">
+                      <Icon name="lock" className="w-7 h-7" />
+                    </div>
+                    <h3 className="text-xl font-bold text-white">Organizer Passkey Gate</h3>
+                    <p className="text-xs text-purple-200 leading-relaxed">
+                      Restricted to verified campus leads, collegiate technical councils, and registered NGO coordinators.
+                    </p>
+                    <button
+                      onClick={() => handleOpenAuthModal('organizer')}
+                      className="w-full py-3 rounded-xl bg-gradient-to-r from-[#8B7CB6] to-pink-500 text-white font-bold text-xs shadow-lg cursor-pointer"
+                    >
+                      Enter Organizer Credentials
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* PAGE 5: COMMUNITIES */}
+            {currentPage === 'communities' && (
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+                <div className="p-6 rounded-3xl glass-panel-3d">
+                  <h2 className="text-2xl font-bold text-white">Campus Student Clubs & Chapters</h2>
+                  <p className="text-xs text-purple-200 mt-1">Connect with student tech chapters, robotics societies, and NGO volunteer networks across Nashik and Pune</p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {clubs.map(club => (
+                    <div key={club.id} className="p-5 rounded-3xl glass-panel-3d flex flex-col justify-between">
+                      <div>
+                        <div className="flex items-center gap-3 mb-3">
+                          <img src={club.logoUrl} alt={club.name} className="w-12 h-12 rounded-2xl object-cover border border-white/20" />
+                          <div>
+                            <h4 className="font-bold text-white text-base">{club.name}</h4>
+                            <span className="text-xs text-pink-300 font-semibold">{club.category}</span>
+                          </div>
+                        </div>
+                        <p className="text-xs text-stone-300 leading-relaxed">{club.description}</p>
+                        <div className="mt-3 p-2.5 rounded-xl bg-white/5 border border-white/10 text-[11px] text-purple-200">
+                          <strong className="text-white">Recent:</strong> {club.recentActivity}
+                        </div>
+                      </div>
+
+                      <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs">
+                        <span className="text-stone-300 font-medium">{club.membersCount} Members</span>
+                        <button
+                          onClick={() => showToast(`Joined ${club.name} campus circle!`)}
+                          className="px-4 py-1.5 rounded-xl bg-gradient-to-r from-[#8B7CB6] to-pink-500 text-white font-bold text-xs shadow-md cursor-pointer"
+                        >
+                          Join Club
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </main>
+
+          {/* FOOTER */}
+          <footer className="glass-panel-3d mt-16 border-t border-white/15 py-8 text-stone-300 text-xs">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="flex items-center gap-2.5">
+                <div className="w-7 h-7 rounded-lg bg-purple-500/20 border border-purple-300/30 p-1 flex items-center justify-center text-white">
+                  <YouthConnectLogo className="w-full h-full" />
+                </div>
+                <span className="font-bold text-white">YouthConnect • Nashik & Pune Campus Network</span>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-4 text-purple-200">
+                <button onClick={() => navigateTo('explore')} className="hover:text-white cursor-pointer">Events</button>
+                <button onClick={() => navigateTo('communities')} className="hover:text-white cursor-pointer">Clubs</button>
+                <button onClick={() => navigateTo('student_dashboard')} className="hover:text-white cursor-pointer">My Passes</button>
+                <span>© 2026 YouthConnect</span>
+              </div>
+            </div>
+          </footer>
+
+          {/* ======================================================== */}
+          {/* MODALS & DIALOGS */}
+          {/* ======================================================== */}
+
+          {/* 1. AUTH & LOGIN MODAL (STUDENT & ORGANIZER) */}
+          {isAuthModalOpen && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-in fade-in">
+              <div className="relative w-full max-w-xl bg-[#181126] text-white rounded-3xl shadow-2xl border border-white/30 overflow-hidden flex flex-col animate-in zoom-in-95">
+                
+                {/* Header & Tabs */}
+                <div className="p-5 bg-white/5 border-b border-white/15 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-2xl bg-purple-500/20 border border-purple-300/40 p-1.5 flex items-center justify-center text-pink-300">
+                      <YouthConnectLogo className="w-full h-full" />
+                    </div>
+                    <div>
+                      <h3 className="text-base font-bold text-white">YouthConnect Portal</h3>
+                      <p className="text-[11px] text-purple-200">Student & Organizer Verification</p>
+                    </div>
+                  </div>
+                  <button onClick={() => setIsAuthModalOpen(false)} className="p-1.5 rounded-full hover:bg-white/10 text-stone-400 hover:text-white cursor-pointer">
+                    <Icon name="x" className="w-5 h-5" />
+                  </button>
+                </div>
+
+                {/* Role Switcher Tabs */}
+                <div className="px-5 pt-4">
+                  <div className="grid grid-cols-2 p-1 rounded-2xl bg-white/10 border border-white/15">
+                    <button
+                      type="button"
+                      onClick={() => { setAuthTab('student'); setAuthError(''); }}
+                      className={`py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                        authTab === 'student'
+                          ? 'bg-gradient-to-r from-[#8B7CB6] to-pink-500 text-white shadow-md'
+                          : 'text-stone-300 hover:text-white'
+                      }`}
+                    >
+                      <Icon name="graduation" className="w-4 h-4" />
+                      <span>Student Portal</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => { setAuthTab('organizer'); setAuthError(''); }}
+                      className={`py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                        authTab === 'organizer'
+                          ? 'bg-gradient-to-r from-[#8B7CB6] to-pink-500 text-white shadow-md'
+                          : 'text-stone-300 hover:text-white'
+                      }`}
+                    >
+                      <Icon name="lock" className="w-4 h-4" />
+                      <span>Organizer Passkey Gate</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Error Banner */}
+                {authError && (
+                  <div className="mx-5 mt-3 p-2.5 rounded-xl bg-rose-500/20 border border-rose-400/40 text-rose-300 text-xs font-medium flex items-center gap-2 animate-in fade-in">
+                    <Icon name="x" className="w-4 h-4 text-rose-400 shrink-0" />
+                    <span>{authError}</span>
+                  </div>
+                )}
+
+                {/* Form Content */}
+                <div className="p-5">
+                  {authTab === 'student' ? (
+                    <form onSubmit={handleStudentAuthSubmit} className="space-y-3 text-xs">
+                      <div>
+                        <label className="text-[11px] text-purple-200 block mb-1">Student Full Name</label>
+                        <input
+                          type="text"
+                          value={authStudentName}
+                          onChange={e => setAuthStudentName(e.target.value)}
+                          placeholder="e.g. Siddhi Lawte"
+                          required
+                          className="w-full px-3 py-2.5 rounded-xl bg-white/10 border border-white/20 text-white focus:outline-none focus:border-pink-400"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="text-[11px] text-purple-200 block mb-1">Academic Email</label>
+                        <input
+                          type="email"
+                          value={authStudentEmail}
+                          onChange={e => setAuthStudentEmail(e.target.value)}
+                          placeholder="e.g. siddhi.lawte@met.edu.in"
+                          required
+                          className="w-full px-3 py-2.5 rounded-xl bg-white/10 border border-white/20 text-white focus:outline-none focus:border-pink-400"
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                        <div>
+                          <label className="text-[11px] text-purple-200 block mb-1">College Campus</label>
+                          <select
+                            value={authStudentCollege}
+                            onChange={e => setAuthStudentCollege(e.target.value)}
+                            className="w-full px-3 py-2.5 rounded-xl bg-[#1f1733] border border-white/20 text-white focus:outline-none focus:border-pink-400 text-xs"
+                          >
+                            {PREMIER_COLLEGES.map(col => (
+                              <option key={col} value={col}>{col}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div>
+                          <label className="text-[11px] text-purple-200 block mb-1">Department / Branch</label>
+                          <input
+                            type="text"
+                            value={authStudentDept}
+                            onChange={e => setAuthStudentDept(e.target.value)}
+                            placeholder="e.g. Computer Engineering"
+                            required
+                            className="w-full px-3 py-2.5 rounded-xl bg-white/10 border border-white/20 text-white focus:outline-none focus:border-pink-400"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Quick 1-Click Fill Demo Student */}
+                      <div className="flex items-center justify-between pt-1">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setAuthStudentName('Siddhi Lawte');
+                            setAuthStudentEmail('siddhi.lawte@met.edu.in');
+                            setAuthStudentCollege(PREMIER_COLLEGES[0]);
+                            setAuthStudentDept('Computer Engineering');
+                          }}
+                          className="text-[11px] text-pink-300 hover:underline font-semibold cursor-pointer"
+                        >
+                          ⚡ Autofill Demo Student (Siddhi)
+                        </button>
+                      </div>
+
+                      <button
+                        type="submit"
+                        className="w-full py-3 mt-2 rounded-xl bg-gradient-to-r from-[#8B7CB6] via-purple-500 to-pink-500 hover:from-[#7C6BA6] hover:to-pink-600 text-white font-bold text-xs shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2"
+                      >
+                        <Icon name="checkCircle" className="w-4 h-4" />
+                        <span>Sign In with College Credentials</span>
+                      </button>
+                    </form>
+                  ) : (
+                    <form onSubmit={handleOrgAuthSubmit} className="space-y-3.5 text-xs">
+                      <div>
+                        <label className="text-[11px] text-purple-200 block mb-1">Organizer / Chapter Email</label>
+                        <input
+                          type="email"
+                          value={authOrgEmail}
+                          onChange={e => setAuthOrgEmail(e.target.value)}
+                          placeholder="e.g. organizers@techsprint2026.org"
+                          required
+                          className="w-full px-3 py-2.5 rounded-xl bg-white/10 border border-white/20 text-white focus:outline-none focus:border-pink-400"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="text-[11px] text-purple-200 block mb-1">Security Passkey</label>
+                        <div className="relative">
+                          <input
+                            type={showOrgPasskey ? "text" : "password"}
+                            value={authOrgPasskey}
+                            onChange={e => setAuthOrgPasskey(e.target.value)}
+                            placeholder="Enter organizer passkey"
+                            required
+                            className="w-full px-3 py-2.5 pr-10 rounded-xl bg-white/10 border border-white/20 text-white font-mono focus:outline-none focus:border-pink-400"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowOrgPasskey(p => !p)}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-white cursor-pointer"
+                          >
+                            <Icon name={showOrgPasskey ? "eyeOff" : "eye"} className="w-4 h-4" />
+                          </button>
+                        </div>
+                        <span className="text-[10px] text-purple-300 mt-1 block">Demo passkey: password123 or organizer2026</span>
+                      </div>
+
+                      {/* Quick 1-Click Fill Demo Organizer */}
+                      <div className="flex items-center justify-between pt-1">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setAuthOrgEmail('organizers@techsprint2026.org');
+                            setAuthOrgPasskey('password123');
+                          }}
+                          className="text-[11px] text-pink-300 hover:underline font-semibold cursor-pointer"
+                        >
+                          ⚡ Autofill Demo Organizer Passkey
+                        </button>
+                      </div>
+
+                      <button
+                        type="submit"
+                        className="w-full py-3 mt-2 rounded-xl bg-gradient-to-r from-purple-700 via-indigo-600 to-pink-600 hover:from-purple-800 hover:to-pink-700 text-white font-bold text-xs shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2"
+                      >
+                        <Icon name="key" className="w-4 h-4" />
+                        <span>Authenticate & Access Organizer Hub</span>
+                      </button>
+                    </form>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 2. Location Selection Modal */}
+          {isLocationModalOpen && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">
+              <div className="bg-[#130f1e] text-white rounded-3xl w-full max-w-sm border border-white/20 p-5 shadow-2xl space-y-4">
+                <div className="flex items-center justify-between border-b border-white/15 pb-3">
+                  <div className="flex items-center gap-2">
+                    <Icon name="mapPin" className="w-5 h-5 text-pink-400" />
+                    <h3 className="font-bold text-base">Select Active City Hub</h3>
+                  </div>
+                  <button onClick={() => setIsLocationModalOpen(false)} className="text-stone-400 hover:text-white cursor-pointer"><Icon name="x" className="w-4 h-4" /></button>
+                </div>
+                <div className="space-y-2">
+                  {['Nashik', 'Pune'].map(city => (
+                    <button
+                      key={city}
+                      onClick={() => { setCurrentLocation(city); setIsLocationModalOpen(false); showToast(`Region set to ${city}`); }}
+                      className={`w-full p-3 rounded-2xl border text-left flex items-center justify-between cursor-pointer transition-all ${
+                        currentLocation === city ? 'bg-purple-600/30 border-purple-400 text-white font-bold' : 'bg-white/5 border-white/10 text-stone-300 hover:bg-white/10'
+                      }`}
+                    >
+                      <span>{city}, Maharashtra</span>
+                      {currentLocation === city && <Icon name="check" className="w-4 h-4 text-pink-400" />}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 3. Global Search Modal */}
+          {isSearchModalOpen && (
+            <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 p-4 bg-black/70 backdrop-blur-md">
+              <div className="bg-[#130f1e] text-white rounded-3xl w-full max-w-xl border border-white/20 p-5 shadow-2xl space-y-4">
+                <div className="flex items-center gap-2 bg-white/10 px-3 py-2 rounded-2xl border border-white/20">
+                  <Icon name="search" className="w-4 h-4 text-purple-300" />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={e => setSearchQuery(e.target.value)}
+                    placeholder="Search hackathons, cultural fests, workshops..."
+                    className="w-full bg-transparent text-sm text-white placeholder-stone-400 focus:outline-none"
+                    autoFocus
+                  />
+                  <button onClick={() => setIsSearchModalOpen(false)} className="text-stone-400 hover:text-white cursor-pointer"><Icon name="x" className="w-4 h-4" /></button>
+                </div>
+
+                <div className="max-h-80 overflow-y-auto space-y-2">
+                  {filteredEvents.map(evt => (
+                    <div
+                      key={evt.id}
+                      onClick={() => { setSelectedEvent(evt); setIsSearchModalOpen(false); }}
+                      className="p-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-between cursor-pointer transition-all"
+                    >
+                      <div>
+                        <h5 className="font-bold text-xs text-white">{evt.title}</h5>
+                        <p className="text-[11px] text-purple-200">{evt.venue} • {evt.category}</p>
+                      </div>
+                      <Icon name="chevronRight" className="w-4 h-4 text-purple-300" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 4. Pass Detail Modal */}
+          {selectedPass && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md">
+              <div className="bg-[#181126] text-white rounded-3xl w-full max-w-md border border-white/30 p-6 shadow-2xl space-y-4">
+                <div className="flex items-center justify-between border-b border-white/15 pb-3">
+                  <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-pink-500/20 text-pink-300 border border-pink-300/30 font-mono">
+                    {selectedPass.tier}
+                  </span>
+                  <button onClick={() => setSelectedPass(null)} className="text-stone-400 hover:text-white cursor-pointer"><Icon name="x" className="w-4 h-4" /></button>
+                </div>
+
+                <div className="text-center">
+                  <h3 className="text-base font-bold text-white">{selectedPass.eventTitle}</h3>
+                  <p className="text-xs text-purple-200 mt-1">{selectedPass.venue}</p>
+                </div>
+
+                {/* Large QR */}
+                <div className="p-4 bg-white rounded-2xl border border-purple-200 flex flex-col items-center justify-center mx-auto w-48 h-48 shadow-xl">
+                  <img 
+                    src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(selectedPass.ticketId + ' | ' + selectedPass.eventTitle + ' | ' + selectedPass.attendeeName)}`} 
+                    alt="Ticket QR" 
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+
+                <div className="text-center">
+                  <span className="font-mono text-xs font-bold text-purple-200 bg-white/10 px-3 py-1 rounded-xl">
+                    {selectedPass.ticketId}
+                  </span>
+                </div>
+
+                <div className="bg-white/5 rounded-2xl p-3 border border-white/10 grid grid-cols-2 gap-2 text-xs">
+                  <div><span className="text-[10px] text-stone-400 block">Attendee</span><span className="font-bold text-white">{selectedPass.attendeeName}</span></div>
+                  <div><span className="text-[10px] text-stone-400 block">PRN / Student ID</span><span className="font-bold text-white font-mono">{selectedPass.studentPrn || '22BCE104'}</span></div>
+                  <div><span className="text-[10px] text-stone-400 block">Time</span><span className="font-medium text-purple-200">{selectedPass.date} • {selectedPass.time}</span></div>
+                  <div><span className="text-[10px] text-stone-400 block">Status</span><span className="font-bold text-emerald-400">{selectedPass.status}</span></div>
+                </div>
+
+                <a
+                  href={`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(selectedPass.eventTitle)}&location=${encodeURIComponent(selectedPass.venue)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-bold text-purple-200 border border-white/20 flex items-center justify-center gap-2 transition-colors cursor-pointer"
+                >
+                  <Icon name="calendarPlus" className="w-4 h-4 text-pink-300" />
+                  <span>Add to Google Calendar</span>
+                </a>
+              </div>
+            </div>
+          )}
+
+          {/* 5. Quick Registration Modal */}
+          {quickRegisterEvent && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md">
+              <div className="bg-[#181126] text-white rounded-3xl w-full max-w-md border border-white/30 p-6 shadow-2xl space-y-4">
+                <div className="flex items-center justify-between border-b border-white/15 pb-3">
+                  <h3 className="text-base font-bold text-white">Instant Event Registration</h3>
+                  <button onClick={() => setQuickRegisterEvent(null)} className="text-stone-400 hover:text-white cursor-pointer"><Icon name="x" className="w-4 h-4" /></button>
+                </div>
+
+                <div className="p-3 bg-white/5 rounded-2xl border border-white/10">
+                  <h4 className="font-bold text-xs text-pink-300">{quickRegisterEvent.title}</h4>
+                  <p className="text-[11px] text-stone-300 mt-0.5">{quickRegisterEvent.venue} • {quickRegisterEvent.fee === 0 ? 'FREE ENTRY' : `₹${quickRegisterEvent.fee}`}</p>
+                </div>
+
+                <form onSubmit={(e) => {
+                  e.preventDefault();
+                  const form = e.target;
+                  handleQuickRegisterConfirm(quickRegisterEvent, {
+                    name: form.name.value,
+                    email: form.email.value,
+                    prn: form.prn.value,
+                    college: form.college.value,
+                    department: form.department.value,
+                  });
+                }} className="space-y-3 text-xs">
+                  <div>
+                    <label className="text-[11px] text-stone-300 block mb-1">Student Full Name</label>
+                    <input name="name" defaultValue={userProfile?.name || 'Siddhi Lawte'} required className="w-full px-3 py-2 rounded-xl bg-white/10 border border-white/20 text-white focus:outline-none focus:border-pink-400" />
+                  </div>
+                  <div>
+                    <label className="text-[11px] text-stone-300 block mb-1">Academic Email</label>
+                    <input name="email" type="email" defaultValue={userProfile?.email || 'siddhi.lawte@met.edu.in'} required className="w-full px-3 py-2 rounded-xl bg-white/10 border border-white/20 text-white focus:outline-none focus:border-pink-400" />
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="text-[11px] text-stone-300 block mb-1">PRN / Roll No</label>
+                      <input name="prn" defaultValue={userProfile?.prn || '22BCE104'} required className="w-full px-3 py-2 rounded-xl bg-white/10 border border-white/20 text-white focus:outline-none focus:border-pink-400 font-mono" />
+                    </div>
+                    <div>
+                      <label className="text-[11px] text-stone-300 block mb-1">Department</label>
+                      <input name="department" defaultValue={userProfile?.department || 'Computer Engineering'} required className="w-full px-3 py-2 rounded-xl bg-white/10 border border-white/20 text-white focus:outline-none focus:border-pink-400" />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-[11px] text-stone-300 block mb-1">College Campus</label>
+                    <select name="college" defaultValue={userProfile?.college || PREMIER_COLLEGES[0]} className="w-full px-3 py-2 rounded-xl bg-[#1f1733] border border-white/20 text-white focus:outline-none focus:border-pink-400">
+                      {PREMIER_COLLEGES.map(c => <option key={c} value={c}>{c}</option>)}
+                    </select>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="w-full py-3 mt-2 rounded-xl bg-gradient-to-r from-[#8B7CB6] via-purple-500 to-pink-500 hover:from-[#7C6BA6] hover:to-pink-600 text-white font-bold text-xs shadow-lg transition-all cursor-pointer"
+                  >
+                    Confirm & Issue Digital QR Pass
+                  </button>
+                </form>
+              </div>
+            </div>
+          )}
+
+          {/* 6. Gate Scanner Modal */}
+          {isGateScannerOpen && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+              <div className="bg-[#181126] text-white rounded-3xl w-full max-w-md border border-white/30 p-6 shadow-2xl space-y-4">
+                <div className="flex items-center justify-between border-b border-white/15 pb-3">
+                  <div className="flex items-center gap-2">
+                    <Icon name="camera" className="w-5 h-5 text-pink-400" />
+                    <h3 className="font-bold text-base">QR Gate Scanner & Check-in</h3>
+                  </div>
+                  <button onClick={() => setIsGateScannerOpen(false)} className="text-stone-400 hover:text-white cursor-pointer"><Icon name="x" className="w-4 h-4" /></button>
+                </div>
+
+                <div className="relative h-44 rounded-2xl bg-black border-2 border-dashed border-purple-400/50 flex flex-col items-center justify-center overflow-hidden">
+                  <div className="w-32 h-32 border-2 border-pink-400 rounded-xl animate-pulse flex items-center justify-center">
+                    <Icon name="qrCode" className="w-12 h-12 text-purple-300 opacity-60" />
+                  </div>
+                  <span className="absolute bottom-2 text-[10px] text-purple-200">Point at student digital pass QR</span>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-xs text-stone-300 block">Manual Ticket ID Verification</label>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      id="manual-ticket-input"
+                      placeholder="e.g. TKT-8492-XYS"
+                      defaultValue="TKT-8492-XYS"
+                      className="flex-1 px-3 py-2 rounded-xl bg-white/10 border border-white/20 text-xs text-white font-mono focus:outline-none"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const val = document.getElementById('manual-ticket-input').value;
+                        handleRedeemPass(val.trim());
+                      }}
+                      className="px-4 py-2 rounded-xl bg-[#8B7CB6] hover:bg-[#7C6BA6] text-white font-bold text-xs cursor-pointer"
+                    >
+                      Verify
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 7. Event Detail Modal */}
+          {selectedEvent && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md">
+              <div className="bg-[#181126] text-white rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-white/30 p-6 shadow-2xl space-y-4">
+                <div className="relative h-48 rounded-2xl overflow-hidden">
+                  <img src={selectedEvent.bannerUrl} alt={selectedEvent.title} className="w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#181126] via-transparent to-transparent" />
+                  <button onClick={() => setSelectedEvent(null)} className="absolute top-3 right-3 p-1.5 rounded-full bg-black/60 text-white cursor-pointer"><Icon name="x" className="w-4 h-4" /></button>
+                </div>
+
+                <div>
+                  <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-pink-500/20 text-pink-300 border border-pink-300/30">
+                    {selectedEvent.category}
+                  </span>
+                  <h2 className="text-xl font-bold text-white mt-2">{selectedEvent.title}</h2>
+                  <p className="text-xs text-purple-200 mt-1">{selectedEvent.venue} • {selectedEvent.date.fullDate}</p>
+                </div>
+
+                <p className="text-xs text-stone-300 leading-relaxed">{selectedEvent.description}</p>
+
+                {selectedEvent.whatYouGet && (
+                  <div className="bg-white/5 p-3.5 rounded-2xl border border-white/10">
+                    <h4 className="text-xs font-bold text-pink-300 mb-2">Perks & Deliverables:</h4>
+                    <ul className="space-y-1 text-xs text-stone-200">
+                      {selectedEvent.whatYouGet.map((item, idx) => (
+                        <li key={idx} className="flex items-center gap-2">
+                          <Icon name="checkCircle" className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                <div className="flex items-center justify-between pt-3 border-t border-white/15">
+                  <span className="text-sm font-bold text-emerald-300">{selectedEvent.fee === 0 ? 'FREE ENTRY' : `Pass Fee: ₹${selectedEvent.fee}`}</span>
+                  <button
+                    onClick={() => { const ev = selectedEvent; setSelectedEvent(null); setQuickRegisterEvent(ev); }}
+                    className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#8B7CB6] to-pink-500 text-white font-bold text-xs shadow-lg cursor-pointer"
+                  >
+                    Register Now
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 8. Create Event Modal */}
+          {isCreateEventOpen && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md">
+              <div className="bg-[#181126] text-white rounded-3xl w-full max-w-lg max-h-[90vh] overflow-y-auto border border-white/30 p-6 shadow-2xl space-y-4">
+                <div className="flex items-center justify-between border-b border-white/15 pb-3">
+                  <h3 className="text-base font-bold text-white">Create New Campus Event</h3>
+                  <button onClick={() => setIsCreateEventOpen(false)} className="text-stone-400 hover:text-white cursor-pointer"><Icon name="x" className="w-4 h-4" /></button>
+                </div>
+
+                <form onSubmit={(e) => {
+                  e.preventDefault();
+                  const form = e.target;
+                  const newEvt = {
+                    id: `evt-${Date.now()}`,
+                    title: form.title.value,
+                    category: form.category.value,
+                    districtTab: form.category.value === 'Hackathon' ? 'Hackathons' : form.category.value === 'Cultural' ? 'College Fests' : 'Workshops',
+                    tags: ['New', form.category.value],
+                    date: { month: 'NOV', day: '25', fullDate: form.date.value, time: '10:00 AM' },
+                    venue: form.venue.value,
+                    area: 'Nashik',
+                    city: 'Nashik',
+                    fee: Number(form.fee.value) || 0,
+                    feeLabel: Number(form.fee.value) === 0 ? 'FREE' : `Pass: ₹${form.fee.value}`,
+                    isHot: true,
+                    status: 'Published',
+                    bannerUrl: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=800&q=80',
+                    posterUrl: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=600&h=800&q=80',
+                    organizer: { name: 'ACM Student Chapter', isVerified: true, type: 'College Club' },
+                    description: form.description.value,
+                    capacity: Number(form.capacity.value) || 300,
+                    registeredCount: 0,
+                  };
+                  handleCreateEvent(newEvt);
+                }} className="space-y-3 text-xs">
+                  <div>
+                    <label className="text-[11px] text-stone-300 block mb-1">Event Title</label>
+                    <input name="title" required placeholder="e.g. AI Innovation Sprint 2026" className="w-full px-3 py-2 rounded-xl bg-white/10 border border-white/20 text-white focus:outline-none" />
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="text-[11px] text-stone-300 block mb-1">Category</label>
+                      <select name="category" className="w-full px-3 py-2 rounded-xl bg-[#1f1733] border border-white/20 text-white focus:outline-none">
+                        <option value="Hackathon">Hackathon</option>
+                        <option value="Cultural">Cultural Fest</option>
+                        <option value="NGO Drives">NGO Volunteer Drive</option>
+                        <option value="Workshop">Technical Workshop</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-[11px] text-stone-300 block mb-1">Pass Fee (₹ 0 for Free)</label>
+                      <input name="fee" type="number" defaultValue="0" className="w-full px-3 py-2 rounded-xl bg-white/10 border border-white/20 text-white focus:outline-none" />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="text-[11px] text-stone-300 block mb-1">Date</label>
+                      <input name="date" defaultValue="Nov 25, 2026" className="w-full px-3 py-2 rounded-xl bg-white/10 border border-white/20 text-white focus:outline-none" />
+                    </div>
+                    <div>
+                      <label className="text-[11px] text-stone-300 block mb-1">Capacity</label>
+                      <input name="capacity" type="number" defaultValue="350" className="w-full px-3 py-2 rounded-xl bg-white/10 border border-white/20 text-white focus:outline-none" />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-[11px] text-stone-300 block mb-1">Campus Venue</label>
+                    <input name="venue" defaultValue="MET Bhujbal Knowledge City Auditorium" className="w-full px-3 py-2 rounded-xl bg-white/10 border border-white/20 text-white focus:outline-none" />
+                  </div>
+                  <div>
+                    <label className="text-[11px] text-stone-300 block mb-1">Description</label>
+                    <textarea name="description" rows="3" defaultValue="Inter-collegiate innovation challenge for students across Nashik." className="w-full px-3 py-2 rounded-xl bg-white/10 border border-white/20 text-white focus:outline-none" />
+                  </div>
+
+                  <button type="submit" className="w-full py-3 rounded-xl bg-gradient-to-r from-[#8B7CB6] to-pink-500 text-white font-bold text-xs shadow-lg cursor-pointer">
+                    Publish Event to Campus Hub
+                  </button>
+                </form>
+              </div>
+            </div>
+          )}
+
+          {/* 9. Slide-over Filter Modal */}
+          {isFilterOpen && (
+            <div className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-sm">
+              <div className="w-full max-w-sm bg-[#130f1e] text-white h-full border-l border-white/20 p-6 shadow-2xl flex flex-col justify-between">
+                <div className="space-y-6 overflow-y-auto">
+                  <div className="flex items-center justify-between border-b border-white/15 pb-3">
+                    <h3 className="text-base font-bold">Filter Events</h3>
+                    <button onClick={() => setIsFilterOpen(false)} className="text-stone-400 hover:text-white cursor-pointer"><Icon name="x" className="w-4 h-4" /></button>
+                  </div>
+
+                  {/* Fee Range */}
+                  <div>
+                    <label className="text-xs font-bold text-pink-300 block mb-2">Registration Fee</label>
+                    <div className="grid grid-cols-3 gap-2 text-xs">
+                      {[
+                        { key: 'all', label: 'All' },
+                        { key: 'free', label: '100% Free' },
+                        { key: 'under500', label: '< ₹200' },
+                      ].map(tier => (
+                        <button
+                          key={tier.key}
+                          onClick={() => setActiveFilters(p => ({ ...p, priceRange: tier.key }))}
+                          className={`py-2 rounded-xl border text-center font-semibold cursor-pointer ${
+                            activeFilters.priceRange === tier.key ? 'bg-pink-500/30 border-pink-400 text-white' : 'bg-white/5 border-white/10 text-stone-300'
+                          }`}
+                        >
+                          {tier.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Domains */}
+                  <div>
+                    <label className="text-xs font-bold text-pink-300 block mb-2">Domain & Category</label>
+                    <div className="flex flex-wrap gap-2 text-xs">
+                      {['Hackathon', 'Cultural', 'NGO Drives', 'Workshop', 'AI', 'Tech'].map(g => {
+                        const isSel = activeFilters.genres.includes(g);
+                        return (
+                          <button
+                            key={g}
+                            onClick={() => {
+                              setActiveFilters(p => ({
+                                ...p,
+                                genres: isSel ? p.genres.filter(x => x !== g) : [...p.genres, g]
+                              }));
+                            }}
+                            className={`px-3 py-1.5 rounded-full border cursor-pointer ${
+                              isSel ? 'bg-gradient-to-r from-[#8B7CB6] to-pink-500 text-white font-bold border-pink-300' : 'bg-white/5 border-white/10 text-stone-300'
+                            }`}
+                          >
+                            {g}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-4 border-t border-white/15 flex gap-2">
+                  <button
+                    onClick={() => { setActiveFilters({ genres: [], languages: [], formats: [], priceRange: 'all' }); setIsFilterOpen(false); }}
+                    className="flex-1 py-2.5 rounded-xl bg-white/10 text-stone-300 hover:text-white text-xs font-bold cursor-pointer"
+                  >
+                    Reset
+                  </button>
+                  <button
+                    onClick={() => setIsFilterOpen(false)}
+                    className="flex-1 py-2.5 rounded-xl bg-[#8B7CB6] text-white text-xs font-bold cursor-pointer shadow-md"
+                  >
+                    Apply Filters
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Toast Alert */}
+          {toastMessage && (
+            <div className="fixed bottom-6 right-6 z-50 bg-[#181126] text-white px-4 py-3 rounded-2xl shadow-2xl border border-white/30 text-xs font-semibold flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+              <span>{toastMessage}</span>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    // Render Root Application
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>

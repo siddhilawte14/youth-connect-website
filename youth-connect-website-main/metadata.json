@@ -1,0 +1,6 @@
+{
+  "name": "Youth Connect",
+  "description": "Student event platform for collegiate hackathons, cultural fests, NGO volunteering drives, tech workshops, digital passes, and campus organizer management.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
