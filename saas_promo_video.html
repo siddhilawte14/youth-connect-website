@@ -158,6 +158,11 @@
         🔄 Restart
       </button>
 
+      <button id="btnSound" class="px-3.5 py-2 rounded-xl bg-purple-900/40 hover:bg-purple-800/60 border border-purple-400/30 text-purple-200 text-xs font-bold transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer">
+        <span id="soundIcon">🔊</span>
+        <span id="soundText">Sound FX: ON</span>
+      </button>
+
       <button id="btnRecord" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold shadow-lg shadow-rose-900/40 transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer">
         🔴 <span id="recordText">Export Video (.webm)</span>
       </button>
@@ -563,12 +568,232 @@
     }
     animateParticles();
 
+    // --- DYNAMIC SAAS AUDIO & SOUND FX SYNTHESIZER ---
+    let isSoundEnabled = true;
+    let audioCtx = null;
+    let masterGain = null;
+    let ambientGain = null;
+    let lastPlayedSceneIdx = -1;
+    let lastTelemetryTickTime = 0;
+
+    const btnSound = document.getElementById('btnSound');
+    const soundIcon = document.getElementById('soundIcon');
+    const soundText = document.getElementById('soundText');
+
+    function initAudioContext() {
+      if (!audioCtx) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContextClass();
+        masterGain = audioCtx.createGain();
+        masterGain.gain.setValueAtTime(0.7, audioCtx.currentTime);
+        masterGain.connect(audioCtx.destination);
+        startAmbientSaaSSynth();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    btnSound.addEventListener('click', () => {
+      isSoundEnabled = !isSoundEnabled;
+      if (isSoundEnabled) {
+        initAudioContext();
+        if (masterGain) masterGain.gain.setValueAtTime(0.7, audioCtx.currentTime);
+        soundIcon.textContent = '🔊';
+        soundText.textContent = 'Sound FX: ON';
+        btnSound.classList.remove('bg-stone-800', 'text-stone-400');
+        btnSound.classList.add('bg-purple-900/40', 'text-purple-200');
+        playSceneWhoosh();
+      } else {
+        if (masterGain && audioCtx) masterGain.gain.setValueAtTime(0, audioCtx.currentTime);
+        soundIcon.textContent = '🔇';
+        soundText.textContent = 'Sound FX: OFF';
+        btnSound.classList.add('bg-stone-800', 'text-stone-400');
+        btnSound.classList.remove('bg-purple-900/40', 'text-purple-200');
+      }
+    });
+
+    // 1. Scene Slide Transition Whoosh + Sub Pluck Sound
+    function playSceneWhoosh() {
+      if (!isSoundEnabled) return;
+      initAudioContext();
+      try {
+        const t = audioCtx.currentTime;
+
+        // Filtered noise swoosh
+        const bufferSize = audioCtx.sampleRate * 0.40;
+        const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const output = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          output[i] = Math.random() * 2 - 1;
+        }
+
+        const whiteNoise = audioCtx.createBufferSource();
+        whiteNoise.buffer = buffer;
+
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.setValueAtTime(1200, t);
+        filter.frequency.exponentialRampToValueAtTime(180, t + 0.35);
+        filter.Q.setValueAtTime(2.5, t);
+
+        const gain = audioCtx.createGain();
+        gain.gain.setValueAtTime(0.01, t);
+        gain.gain.exponentialRampToValueAtTime(0.24, t + 0.07);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.38);
+
+        whiteNoise.connect(filter);
+        filter.connect(gain);
+        gain.connect(masterGain);
+
+        whiteNoise.start(t);
+        whiteNoise.stop(t + 0.40);
+
+        // Sub-Bass Transition Impact Pluck
+        const subOsc = audioCtx.createOscillator();
+        const subGain = audioCtx.createGain();
+        subOsc.type = 'sine';
+        subOsc.frequency.setValueAtTime(115, t);
+        subOsc.frequency.exponentialRampToValueAtTime(40, t + 0.32);
+
+        subGain.gain.setValueAtTime(0.20, t);
+        subGain.gain.exponentialRampToValueAtTime(0.001, t + 0.32);
+
+        subOsc.connect(subGain);
+        subGain.connect(masterGain);
+
+        subOsc.start(t);
+        subOsc.stop(t + 0.35);
+      } catch (e) {}
+    }
+
+    // 2. High-Tech Telemetry Data Tick
+    function playTelemetryTick() {
+      if (!isSoundEnabled) return;
+      initAudioContext();
+      try {
+        const t = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(950 + Math.random() * 300, t);
+        osc.frequency.exponentialRampToValueAtTime(320, t + 0.04);
+
+        gain.gain.setValueAtTime(0.08, t);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.04);
+
+        osc.connect(gain);
+        gain.connect(masterGain);
+
+        osc.start(t);
+        osc.stop(t + 0.05);
+      } catch (e) {}
+    }
+
+    // 3. Digital Pass Verified / Access Granted Major Chord Chime
+    function playVerificationChime() {
+      if (!isSoundEnabled) return;
+      initAudioContext();
+      try {
+        const notes = [659.25, 830.61, 987.77, 1318.51]; // E major arpeggio
+        notes.forEach((freq, i) => {
+          const t = audioCtx.currentTime + i * 0.07;
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, t);
+
+          gain.gain.setValueAtTime(0.01, t);
+          gain.gain.linearRampToValueAtTime(0.16, t + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.55);
+
+          osc.connect(gain);
+          gain.connect(masterGain);
+
+          osc.start(t);
+          osc.stop(t + 0.60);
+        });
+      } catch (e) {}
+    }
+
+    // 4. Grand Celebration Outro Fanfare (Sub-Drop + Shimmer)
+    function playCelebrationSound() {
+      if (!isSoundEnabled) return;
+      initAudioContext();
+      try {
+        const t = audioCtx.currentTime;
+
+        const subOsc = audioCtx.createOscillator();
+        const subGain = audioCtx.createGain();
+        subOsc.type = 'sine';
+        subOsc.frequency.setValueAtTime(140, t);
+        subOsc.frequency.exponentialRampToValueAtTime(35, t + 0.8);
+
+        subGain.gain.setValueAtTime(0.30, t);
+        subGain.gain.exponentialRampToValueAtTime(0.001, t + 0.8);
+
+        subOsc.connect(subGain);
+        subGain.connect(masterGain);
+
+        subOsc.start(t);
+        subOsc.stop(t + 0.85);
+
+        const sparkles = [523.25, 659.25, 783.99, 1046.5, 1318.51];
+        sparkles.forEach((freq, idx) => {
+          const st = t + idx * 0.06;
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, st);
+
+          gain.gain.setValueAtTime(0.12, st);
+          gain.gain.exponentialRampToValueAtTime(0.001, st + 0.7);
+
+          osc.connect(gain);
+          gain.connect(masterGain);
+
+          osc.start(st);
+          osc.stop(st + 0.75);
+        });
+      } catch (e) {}
+    }
+
+    // 5. Continuous Ambient SaaS Chord Pad
+    function startAmbientSaaSSynth() {
+      if (!audioCtx || ambientGain) return;
+      try {
+        ambientGain = audioCtx.createGain();
+        ambientGain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+        ambientGain.connect(masterGain);
+
+        const freqs = [174.61, 261.63, 311.13, 415.30];
+        freqs.forEach(freq => {
+          const osc = audioCtx.createOscillator();
+          const filter = audioCtx.createBiquadFilter();
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(450, audioCtx.currentTime);
+
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+          osc.connect(filter);
+          filter.connect(ambientGain);
+          osc.start();
+        });
+      } catch (e) {}
+    }
+
     // --- Update Active Scene ---
     function updateScene() {
+      let currentIdx = -1;
       scenes.forEach((s, idx) => {
         const sceneEl = document.getElementById(s.id);
         const dotEl = document.getElementById(`dot${idx + 1}`);
         if (currentTime >= s.start && currentTime < s.end) {
+          currentIdx = idx;
           sceneEl.classList.add('active');
           if (dotEl) {
             dotEl.className = 'w-2 h-2 rounded-full bg-pink-400 scale-125 transition-all';
@@ -583,6 +808,24 @@
           }
         }
       });
+
+      // Sound FX Triggering on Scene Transitions
+      if (currentIdx !== lastPlayedSceneIdx && currentIdx !== -1) {
+        lastPlayedSceneIdx = currentIdx;
+        playSceneWhoosh();
+
+        if (currentIdx === 4 || currentIdx === 5) {
+          setTimeout(playVerificationChime, 300);
+        } else if (currentIdx === 6) {
+          setTimeout(playCelebrationSound, 150);
+        }
+      }
+
+      // Telemetry Blips during Scene 3
+      if (currentIdx === 2 && currentTime - lastTelemetryTickTime > 0.8) {
+        lastTelemetryTickTime = currentTime;
+        playTelemetryTick();
+      }
 
       // Update Progress Bar
       const progressPercent = (currentTime / TOTAL_DURATION) * 100;
@@ -692,7 +935,22 @@
           }
         }
 
-        mediaRecorder = new MediaRecorder(stream, { mimeType, videoBitsPerSecond: 8000000 });
+        initAudioContext();
+        let audioTracks = [];
+        try {
+          if (audioCtx && masterGain) {
+            const audioDest = audioCtx.createMediaStreamDestination();
+            masterGain.connect(audioDest);
+            audioTracks = audioDest.stream.getAudioTracks();
+          }
+        } catch (e) {}
+
+        const combinedStream = new MediaStream([
+          ...stream.getVideoTracks(),
+          ...audioTracks
+        ]);
+
+        mediaRecorder = new MediaRecorder(combinedStream, { mimeType, videoBitsPerSecond: 8000000 });
 
         mediaRecorder.ondataavailable = e => {
           if (e.data && e.data.size > 0) recordedChunks.push(e.data);
