@@ -51,9 +51,16 @@
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
 
   <style>
-    * {
+    /* Default typography: Descriptions, body text, buttons, and inputs in clean Sans-Serif */
+    body, p, span, div, button, input, select, textarea, label, a, li, .font-sans {
+      font-family: 'Inter', 'Public Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    /* Titles, Headlines, and Section Headers in classic Times New Roman */
+    h1, h2, h3, h4, h5, h6, .font-serif, .title-times {
       font-family: 'Times New Roman', Times, 'Tinos', Georgia, serif !important;
     }
+
     body {
       background-color: #070913;
       color: #ffffff;
@@ -961,7 +968,7 @@
       const registeredPassList = Object.values(passes);
 
       return (
-        <div className="min-h-screen relative flex flex-col font-serif selection:bg-[#8B7CB6]/40 selection:text-white">
+        <div className="min-h-screen relative flex flex-col font-sans selection:bg-[#8B7CB6]/40 selection:text-white">
           <FluidBackground />
 
           {/* NAVBAR */}
