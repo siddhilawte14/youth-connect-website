@@ -32,7 +32,11 @@ router.post('/login/organizer', authLimiter, validate(organizerLoginSchema), aut
 // POST /api/v1/auth/register
 router.post('/register', authLimiter, validate(registerSchema), authController.register);
 
-// GET /api/v1/auth/profile
+// GET /api/v1/auth/profile & /api/v1/auth/me
 router.get('/profile', authMiddleware, authController.getProfile);
+router.get('/me', authMiddleware, authController.getProfile);
+
+// PUT /api/v1/auth/profile
+router.put('/profile', authMiddleware, authController.updateProfile);
 
 export default router;

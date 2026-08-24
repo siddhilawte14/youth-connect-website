@@ -144,6 +144,23 @@ test('Auth - Registration and Profile retrieval', async () => {
   assert.strictEqual(profRes.status, 200);
   assert.strictEqual(profRes.json.data.email, email);
   assert.strictEqual(profRes.json.data.name, 'John Doe');
+
+  // Test GET /me alias
+  const meRes = await request('/api/v1/auth/me', {
+    method: 'GET',
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  assert.strictEqual(meRes.status, 200);
+  assert.strictEqual(meRes.json.data.email, email);
+
+  // Test PUT /profile update
+  const updateRes = await request('/api/v1/auth/profile', {
+    method: 'PUT',
+    headers: { Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ department: 'Information Technology' }),
+  });
+  assert.strictEqual(updateRes.status, 200);
+  assert.strictEqual(updateRes.json.data.department, 'Information Technology');
 });
 
 // ─── EVENT TESTS ───

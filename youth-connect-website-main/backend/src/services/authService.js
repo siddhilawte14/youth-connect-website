@@ -99,4 +99,21 @@ export const authService = {
     if (!user) throw new AppError('User not found', 404, 'NOT_FOUND');
     return formatUser(user);
   },
+
+  /**
+   * Update user profile.
+   */
+  async updateProfile(userId, updates) {
+    const allowed = ['name', 'college', 'department', 'branch', 'year', 'avatarUrl', 'clubName'];
+    const filteredUpdates = {};
+    for (const key of allowed) {
+      if (updates[key] !== undefined) {
+        filteredUpdates[key] = updates[key];
+      }
+    }
+    const updated = userRepository.update(userId, filteredUpdates);
+    if (!updated) throw new AppError('User not found', 404, 'NOT_FOUND');
+    auditLogRepository.create({ action: 'Profile Updated', actor: updated.name, target: updated.email, status: 'Success' });
+    return formatUser(updated);
+  },
 };

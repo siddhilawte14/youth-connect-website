@@ -32,4 +32,11 @@ export const authController = {
       return successResponse(res, user, 'Profile retrieved');
     } catch (err) { next(err); }
   },
+
+  async updateProfile(req, res, next) {
+    try {
+      const updated = await authService.updateProfile(req.user.id, req.body);
+      return successResponse(res, updated, 'Profile updated successfully');
+    } catch (err) { next(err); }
+  },
 };
