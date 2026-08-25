@@ -74,7 +74,16 @@ export const RegistrationFlowView: React.FC<RegistrationFlowViewProps> = ({
   const [department, setDepartment] = useState('Computer Science');
   const [teamName, setTeamName] = useState('ByteCraft Nashik');
 
-  // Payment simulation state
+  // Payment method & simulation state
+  const [paymentMethod, setPaymentMethod] = useState<'upi' | 'card' | 'netbanking' | 'wallet'>('upi');
+  const [upiSubMode, setUpiSubMode] = useState<'apps' | 'id' | 'qr'>('apps');
+  const [selectedUpiApp, setSelectedUpiApp] = useState('gpay');
+  const [upiIdInput, setUpiIdInput] = useState('rahul@okhdfcbank');
+  const [cardNumber, setCardNumber] = useState('4532 8920 1204 8492');
+  const [cardExpiry, setCardExpiry] = useState('12/28');
+  const [cardCvv, setCardCvv] = useState('749');
+  const [selectedBank, setSelectedBank] = useState('HDFC Bank');
+  const [selectedWallet, setSelectedWallet] = useState('Amazon Pay');
   const [paymentStatus, setPaymentStatus] = useState<'idle' | 'processing' | 'success' | 'failed' | 'pending'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -289,97 +298,214 @@ export const RegistrationFlowView: React.FC<RegistrationFlowViewProps> = ({
               }}
             />
 
-            <div className="relative z-10">
-              <div className="flex items-center gap-2.5 mb-6 border-b border-[#e5eeff] pb-3">
-                <div className="w-8 h-8 rounded-full bg-[#eff4ff] text-[#0058be] flex items-center justify-center">
-                  <Wallet className="w-4 h-4" />
+            <div className="relative z-10 space-y-4">
+              <div className="flex items-center justify-between border-b border-[#e5eeff] pb-3">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-full bg-[#eff4ff] text-[#0058be] flex items-center justify-center">
+                    <Wallet className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-bold text-[#0b1c30] font-headline">
+                      2. Secure Checkout
+                    </h2>
+                    <span className="text-[10px] text-[#727785]">Secured by Razorpay • 256-Bit SSL</span>
+                  </div>
                 </div>
-                <h2 className="text-lg font-bold text-[#0b1c30] font-headline">
-                  2. Secure Payment
-                </h2>
+                <span className="text-xs font-bold text-[#0058be] bg-blue-50 px-2.5 py-1 rounded-full border border-blue-200">
+                  {totalAmount > 0 ? `₹${totalAmount.toFixed(2)} Total` : 'Free Pass'}
+                </span>
               </div>
 
-              <div className="flex flex-col md:flex-row gap-6 items-center md:items-start justify-between">
-                <div className="flex-1 w-full">
-                  <div className="bg-[#e5eeff]/70 p-4 rounded-xl mb-4 border border-[#c2c6d6]/40">
-                    <div className="flex justify-between items-center mb-2 text-xs text-[#424754]">
-                      <span>Registration Fee</span>
-                      <span className="font-bold text-sm text-[#0b1c30]">
-                        ₹{registrationFee.toFixed(2)}
-                      </span>
-                    </div>
+              {/* Price Breakdown Card */}
+              <div className="bg-[#e5eeff]/60 p-3.5 rounded-xl border border-[#c2c6d6]/40 text-xs">
+                <div className="flex justify-between items-center text-[#424754]">
+                  <span>Delegate Pass Fee</span>
+                  <span className="font-bold text-[#0b1c30]">₹{registrationFee.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between items-center text-[#424754] mt-1">
+                  <span>Convenience Fee (100% discount)</span>
+                  <span className="text-emerald-700 font-medium">₹0.00 Waived</span>
+                </div>
+                <div className="border-t border-[#c2c6d6] pt-2 mt-2 flex justify-between items-center">
+                  <span className="font-bold text-[#0b1c30]">Total Net Amount</span>
+                  <span className="text-lg font-black text-[#0058be] font-headline">₹{totalAmount.toFixed(2)}</span>
+                </div>
+              </div>
 
-                    <div className="flex justify-between items-center mb-2 text-xs text-[#424754]">
-                      <span>Platform Fee (100% discount)</span>
-                      <span className="text-emerald-700 line-through font-medium">
-                        ₹{platformFee.toFixed(2)}
-                      </span>
-                    </div>
+              {/* Payment Methods Tabs */}
+              {totalAmount > 0 && (
+                <div>
+                  <label className="text-[11px] font-bold text-[#0b1c30] block mb-1.5 uppercase">Choose Payment Option</label>
+                  <div className="grid grid-cols-3 gap-2 text-xs">
+                    {[
+                      { id: 'upi', label: 'UPI / QR', icon: '⚡' },
+                      { id: 'card', label: 'Cards', icon: '💳' },
+                      { id: 'netbanking', label: 'NetBanking', icon: '🏦' }
+                    ].map(tab => (
+                      <button
+                        key={tab.id}
+                        type="button"
+                        onClick={() => setPaymentMethod(tab.id as any)}
+                        className={`p-2 rounded-xl border text-center font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                          paymentMethod === tab.id
+                            ? 'bg-[#0058be] text-white border-[#0058be] shadow-sm'
+                            : 'bg-white text-[#424754] border-[#c2c6d6] hover:bg-[#f4f6fb]'
+                        }`}
+                      >
+                        <span>{tab.icon}</span>
+                        <span>{tab.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
 
-                    <div className="border-t border-[#c2c6d6] pt-3 mt-2 flex justify-between items-center">
-                      <span className="text-sm font-bold text-[#0b1c30]">Total Amount</span>
-                      <span className="text-xl font-extrabold text-[#0058be] font-headline">
-                        ₹{totalAmount.toFixed(2)}
-                      </span>
-                    </div>
+              {/* Payment Method Details */}
+              {totalAmount > 0 && paymentMethod === 'upi' && (
+                <div className="p-3.5 bg-[#f8f9ff] rounded-xl border border-[#d3e4fe] space-y-3">
+                  <div className="grid grid-cols-3 p-1 bg-white rounded-lg border border-[#c2c6d6] text-[11px] font-bold text-center">
+                    {[
+                      { id: 'apps', label: 'UPI Apps' },
+                      { id: 'id', label: 'UPI ID' },
+                      { id: 'qr', label: 'Scan QR' }
+                    ].map(sub => (
+                      <button
+                        key={sub.id}
+                        type="button"
+                        onClick={() => setUpiSubMode(sub.id as any)}
+                        className={`py-1 rounded transition-all ${
+                          upiSubMode === sub.id ? 'bg-[#0058be] text-white font-bold' : 'text-[#727785]'
+                        }`}
+                      >
+                        {sub.label}
+                      </button>
+                    ))}
                   </div>
 
-                  <p className="text-xs text-[#424754] mb-4 flex items-center gap-1.5 font-medium">
-                    <Lock className="w-3.5 h-3.5 text-[#0058be]" /> Safe & Secure UPI Payment
-                  </p>
-                </div>
+                  {upiSubMode === 'apps' && (
+                    <div className="grid grid-cols-3 gap-2">
+                      {[
+                        { id: 'gpay', name: 'GPay' },
+                        { id: 'phonepe', name: 'PhonePe' },
+                        { id: 'paytm', name: 'Paytm' }
+                      ].map(app => (
+                        <button
+                          key={app.id}
+                          type="button"
+                          onClick={() => setSelectedUpiApp(app.id)}
+                          className={`p-2 rounded-lg border text-xs font-bold transition-all ${
+                            selectedUpiApp === app.id ? 'bg-blue-50 border-[#0058be] text-[#0058be]' : 'bg-white border-[#c2c6d6] text-[#424754]'
+                          }`}
+                        >
+                          {app.name}
+                        </button>
+                      ))}
+                    </div>
+                  )}
 
-                {/* QR Box & Button */}
-                <div className="w-full md:w-auto flex flex-col items-center gap-3">
-                  <div className="bg-white p-2 rounded-xl border border-[#c2c6d6] shadow-xs inline-block">
-                    <img
-                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuAzYLwMduTkXO6t9JALJ9nxmXEtdh1U6kZe5zPypJtYnmp-IzLlFth5mt782yBUjYf0LQ0fbVNAyEgoHrVHJQZECUB6E_-nAVQP43nUFovlRkjXes-h2ghWKlfVTr6f2z4Z3TmGWlDZ37Ki-zClrlOXlbdRdoCNWPNMbwMt2KnHC7Wq0WuwZLYYMcqsvovQ9JCaCAcsZqApyGkshz11DAQMcDrizlFdo-BG0NWQGS3b3ANTfjxhZf3x"
-                      alt="UPI QR Code"
-                      className="w-32 h-32 object-cover rounded-lg"
+                  {upiSubMode === 'id' && (
+                    <input
+                      type="text"
+                      value={upiIdInput}
+                      onChange={e => setUpiIdInput(e.target.value)}
+                      placeholder="e.g. name@okhdfcbank"
+                      className="w-full bg-white border border-[#c2c6d6] rounded-xl px-3 py-2 text-xs text-[#0b1c30] focus:outline-none focus:border-[#0058be]"
+                    />
+                  )}
+
+                  {upiSubMode === 'qr' && (
+                    <div className="text-center">
+                      <img
+                        src={`https://api.qrserver.com/v1/create-qr-code/?size=130x130&data=${encodeURIComponent('upi://pay?pa=youthconnect@razorpay&pn=YouthConnect&am=' + totalAmount + '&cu=INR')}`}
+                        alt="UPI QR Code"
+                        className="w-28 h-28 mx-auto object-cover rounded-lg border border-[#c2c6d6] p-1 bg-white shadow-xs"
+                      />
+                      <p className="text-[10px] text-[#727785] mt-1">Scan using any UPI application</p>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {totalAmount > 0 && paymentMethod === 'card' && (
+                <div className="p-3.5 bg-[#f8f9ff] rounded-xl border border-[#d3e4fe] space-y-2 text-xs">
+                  <input
+                    type="text"
+                    value={cardNumber}
+                    onChange={e => setCardNumber(e.target.value)}
+                    placeholder="Card Number"
+                    className="w-full bg-white border border-[#c2c6d6] rounded-xl px-3 py-2 font-mono"
+                  />
+                  <div className="grid grid-cols-2 gap-2">
+                    <input
+                      type="text"
+                      value={cardExpiry}
+                      onChange={e => setCardExpiry(e.target.value)}
+                      placeholder="MM/YY"
+                      className="w-full bg-white border border-[#c2c6d6] rounded-xl px-3 py-2 font-mono text-center"
+                    />
+                    <input
+                      type="password"
+                      value={cardCvv}
+                      onChange={e => setCardCvv(e.target.value)}
+                      placeholder="CVV"
+                      maxLength={4}
+                      className="w-full bg-white border border-[#c2c6d6] rounded-xl px-3 py-2 font-mono text-center"
                     />
                   </div>
-
-                  <button
-                    id="btn-pay-upi"
-                    onClick={() => handlePay('success')}
-                    disabled={paymentStatus === 'processing'}
-                    className="w-full bg-[#0058be] hover:bg-[#2563EB] text-white font-bold text-xs py-2.5 px-4 rounded-xl transition-all shadow-xs flex items-center justify-center gap-2 active:scale-95 disabled:opacity-50"
-                  >
-                    <CreditCard className="w-4 h-4" />
-                    {paymentStatus === 'processing'
-                      ? 'Verifying Payment...'
-                      : totalAmount > 0 ? `Pay ₹${totalAmount} via UPI` : 'Confirm Free Registration'}
-                  </button>
                 </div>
-              </div>
+              )}
+
+              {totalAmount > 0 && paymentMethod === 'netbanking' && (
+                <div className="p-3.5 bg-[#f8f9ff] rounded-xl border border-[#d3e4fe] space-y-2 text-xs">
+                  <select
+                    value={selectedBank}
+                    onChange={e => setSelectedBank(e.target.value)}
+                    className="w-full bg-white border border-[#c2c6d6] rounded-xl px-3 py-2"
+                  >
+                    <option>HDFC Bank</option>
+                    <option>State Bank of India (SBI)</option>
+                    <option>ICICI Bank</option>
+                    <option>Axis Bank</option>
+                    <option>Kotak Mahindra Bank</option>
+                  </select>
+                </div>
+              )}
+
+              {/* Action Button */}
+              <button
+                id="btn-pay-upi"
+                onClick={() => handlePay('success')}
+                disabled={paymentStatus === 'processing'}
+                className="w-full bg-[#0058be] hover:bg-[#004294] text-white font-bold text-xs py-3 px-4 rounded-xl transition-all shadow-md flex items-center justify-center gap-2 active:scale-95 disabled:opacity-50 cursor-pointer"
+              >
+                <CreditCard className="w-4 h-4" />
+                {paymentStatus === 'processing'
+                  ? 'Authorizing via Razorpay...'
+                  : totalAmount > 0 ? `Pay ₹${totalAmount.toFixed(2)} via Razorpay Secure` : 'Confirm Free Registration'}
+              </button>
 
               {/* Edge Case Simulation Chips */}
-              <div className="mt-6 pt-4 border-t border-[#e5eeff] flex flex-wrap items-center gap-2 text-xs">
-                <span className="text-[11px] text-[#727785] font-semibold mr-1">Simulate Edge States:</span>
+              <div className="pt-2 border-t border-[#e5eeff] flex flex-wrap items-center gap-2 text-xs">
+                <span className="text-[11px] text-[#727785] font-semibold mr-1">Test Simulator:</span>
                 <button
+                  type="button"
                   onClick={() => handlePay('failed')}
-                  className="flex items-center gap-1 text-[#93000a] bg-[#ffdad6] hover:bg-red-200 px-2.5 py-1 rounded-full text-xs font-semibold transition-colors"
+                  className="flex items-center gap-1 text-[#93000a] bg-[#ffdad6] hover:bg-red-200 px-2.5 py-1 rounded-full text-xs font-semibold transition-colors cursor-pointer"
                 >
-                  <AlertCircle className="w-3 h-3" /> Payment Failed (Simulated)
-                </button>
-                <button
-                  onClick={() => handlePay('pending')}
-                  className="flex items-center gap-1 text-[#9d4300] bg-[#ffdbca] hover:bg-orange-200 px-2.5 py-1 rounded-full text-xs font-semibold transition-colors"
-                >
-                  <Clock className="w-3 h-3" /> Pending (Simulated)
+                  <AlertCircle className="w-3 h-3" /> Simulate Bank Decline
                 </button>
               </div>
 
-              {/* Error or Pending Toast */}
+              {/* Error or Pending Alert */}
               {paymentStatus === 'failed' && (
-                <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 flex items-center gap-2 animate-in fade-in">
+                <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 flex items-center gap-2 animate-in fade-in">
                   <AlertCircle className="w-4 h-4 shrink-0" />
                   <span>{errorMessage || 'Payment transaction failed. Please retry.'}</span>
                 </div>
               )}
 
               {paymentStatus === 'pending' && (
-                <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-800 flex items-center gap-2 animate-in fade-in">
+                <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-800 flex items-center gap-2 animate-in fade-in">
                   <Clock className="w-4 h-4 shrink-0" />
                   <span>{errorMessage || 'Payment pending reconciliation.'}</span>
                 </div>
