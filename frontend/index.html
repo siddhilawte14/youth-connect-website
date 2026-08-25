@@ -1200,8 +1200,8 @@
                   <Icon name="search" className="w-4 h-4" />
                 </button>
 
-                {/* Role Switcher Button */}
-                {activeRoleView === 'organizer' ? (
+                {/* Role Switcher Button - Shown ONLY in Organizer view to return to Student view */}
+                {activeRoleView === 'organizer' && (
                   <button
                     onClick={() => {
                       setActiveRoleView('student');
@@ -1213,21 +1213,6 @@
                   >
                     <Icon name="graduation" className="w-3.5 h-3.5 text-emerald-400" />
                     <span>Student View</span>
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => {
-                      if (userProfile?.role === 'organizer') {
-                        setActiveRoleView('organizer');
-                        navigateTo('organizer_dashboard');
-                      } else {
-                        handleOpenAuthModal('organizer');
-                      }
-                    }}
-                    className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-900/40 hover:bg-purple-900/70 border border-purple-400/40 text-xs font-semibold text-purple-200 hover:text-white transition-all cursor-pointer btn-spring"
-                  >
-                    <Icon name="lock" className="w-3.5 h-3.5 text-pink-300" />
-                    <span>Organizer Hub</span>
                   </button>
                 )}
 
@@ -1270,47 +1255,79 @@
                             </span>
                           </div>
 
-                          <button
-                            onClick={() => {
-                              setActiveRoleView('student');
-                              navigateTo('student_dashboard');
-                            }}
-                            className="w-full p-2 rounded-xl hover:bg-white/10 text-stone-200 hover:text-white flex items-center justify-between transition-colors cursor-pointer"
-                          >
-                            <span className="flex items-center gap-2">
-                              <Icon name="ticket" className="w-4 h-4 text-pink-300" />
-                              <span>My Digital Passes</span>
-                            </span>
-                            <span className="bg-pink-500/30 text-pink-300 text-[10px] font-bold px-1.5 py-0.2 rounded-full">
-                              {registeredPassList.length}
-                            </span>
-                          </button>
-
-                          <button
-                            onClick={() => {
-                              if (userProfile.role === 'organizer') {
-                                setActiveRoleView('organizer');
-                                navigateTo('organizer_dashboard');
-                              } else {
-                                handleOpenAuthModal('organizer');
-                              }
-                            }}
-                            className="w-full p-2 rounded-xl hover:bg-white/10 text-stone-200 hover:text-white flex items-center gap-2 transition-colors cursor-pointer"
-                          >
-                            <Icon name="lock" className="w-4 h-4 text-purple-400" />
-                            <span>Organizer Workspace</span>
-                          </button>
-
-                          <button
-                            onClick={() => {
-                              handleOpenAuthModal('student');
-                              setShowProfileDropdown(false);
-                            }}
-                            className="w-full p-2 rounded-xl hover:bg-purple-900/30 text-purple-300 font-bold flex items-center gap-2 transition-colors cursor-pointer"
-                          >
-                            <Icon name="sparkles" className="w-4 h-4 text-pink-400" />
-                            <span>Switch Role / Account</span>
-                          </button>
+                          {/* Role-Segregated Menu Items */}
+                          {userProfile.role === 'organizer' ? (
+                            <>
+                              <button
+                                onClick={() => {
+                                  setActiveRoleView('organizer');
+                                  navigateTo('organizer_dashboard');
+                                }}
+                                className="w-full p-2 rounded-xl hover:bg-white/10 text-stone-200 hover:text-white flex items-center gap-2 transition-colors cursor-pointer"
+                              >
+                                <Icon name="lock" className="w-4 h-4 text-purple-400" />
+                                <span>Organizer Command Center</span>
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setShowProfileDropdown(false);
+                                  setIsGateScannerOpen(true);
+                                }}
+                                className="w-full p-2 rounded-xl hover:bg-white/10 text-stone-200 hover:text-white flex items-center gap-2 transition-colors cursor-pointer"
+                              >
+                                <Icon name="camera" className="w-4 h-4 text-pink-300" />
+                                <span>Gate Barcode Scanner</span>
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setShowProfileDropdown(false);
+                                  setIsBroadcastOpen(true);
+                                }}
+                                className="w-full p-2 rounded-xl hover:bg-white/10 text-stone-200 hover:text-white flex items-center gap-2 transition-colors cursor-pointer"
+                              >
+                                <Icon name="mail" className="w-4 h-4 text-indigo-300" />
+                                <span>Bulk Email & Broadcast</span>
+                              </button>
+                            </>
+                          ) : (
+                            <>
+                              <button
+                                onClick={() => {
+                                  setActiveRoleView('student');
+                                  navigateTo('student_dashboard');
+                                }}
+                                className="w-full p-2 rounded-xl hover:bg-white/10 text-stone-200 hover:text-white flex items-center justify-between transition-colors cursor-pointer"
+                              >
+                                <span className="flex items-center gap-2">
+                                  <Icon name="ticket" className="w-4 h-4 text-pink-300" />
+                                  <span>My Digital Passes</span>
+                                </span>
+                                <span className="bg-pink-500/30 text-pink-300 text-[10px] font-bold px-1.5 py-0.2 rounded-full">
+                                  {registeredPassList.length}
+                                </span>
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setShowProfileDropdown(false);
+                                  navigateTo('explore');
+                                }}
+                                className="w-full p-2 rounded-xl hover:bg-white/10 text-stone-200 hover:text-white flex items-center gap-2 transition-colors cursor-pointer"
+                              >
+                                <Icon name="compass" className="w-4 h-4 text-purple-300" />
+                                <span>Explore Campus Events</span>
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setShowProfileDropdown(false);
+                                  navigateTo('communities');
+                                }}
+                                className="w-full p-2 rounded-xl hover:bg-white/10 text-stone-200 hover:text-white flex items-center gap-2 transition-colors cursor-pointer"
+                              >
+                                <Icon name="users" className="w-4 h-4 text-emerald-300" />
+                                <span>Campus Student Clubs</span>
+                              </button>
+                            </>
+                          )}
 
                           <div className="border-t border-white/15 my-1.5" />
 
@@ -2049,6 +2066,19 @@
                   <button onClick={() => navigateTo('explore')} className="hover:text-white cursor-pointer transition-colors">Events</button>
                   <button onClick={() => navigateTo('communities')} className="hover:text-white cursor-pointer transition-colors">Clubs</button>
                   <button onClick={() => navigateTo('student_dashboard')} className="hover:text-white cursor-pointer transition-colors">My Passes</button>
+                  <button 
+                    onClick={() => {
+                      if (userProfile?.role === 'organizer') {
+                        setActiveRoleView('organizer');
+                        navigateTo('organizer_dashboard');
+                      } else {
+                        handleOpenAuthModal('organizer');
+                      }
+                    }} 
+                    className="hover:text-pink-300 cursor-pointer transition-colors font-medium border-l border-white/20 pl-4"
+                  >
+                    Campus Organizer Portal
+                  </button>
                   <span>© 2026 YouthConnect</span>
                 </div>
               </div>
@@ -2059,55 +2089,29 @@
           {/* MODALS & DIALOGS (ELEVATED TO HIGHEST Z-INDEX Z-[9999]) */}
           {/* ======================================================== */}
 
-          {/* 1. AUTH & LOGIN MODAL (STUDENT & ORGANIZER) */}
+          {/* 1. SEPARATED AUTH & LOGIN MODALS */}
           {isAuthModalOpen && (
             <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
-              <div className="relative w-full max-w-xl bg-[#181126] text-white rounded-3xl shadow-2xl border border-white/30 overflow-hidden flex flex-col animate-in zoom-in-95 duration-200">
+              <div className="relative w-full max-w-md bg-[#181126] text-white rounded-3xl shadow-2xl border border-white/30 overflow-hidden flex flex-col animate-in zoom-in-95 duration-200">
                 
-                {/* Header & Tabs */}
+                {/* Modal Header */}
                 <div className="p-5 bg-white/5 border-b border-white/15 flex items-center justify-between">
                   <div className="flex items-center gap-3.5">
-                    <div className="w-14 h-14 rounded-2xl p-0.5 bg-gradient-to-tr from-purple-600 via-pink-500 to-indigo-400 shadow-[0_0_25px_rgba(236,72,153,0.55)] shrink-0 animate-float-slow">
-                      <img src="./assets/logo.png" alt="Logo" className="w-full h-full object-cover rounded-[14px]" />
+                    <div className="w-12 h-12 rounded-2xl p-0.5 bg-gradient-to-tr from-purple-600 via-pink-500 to-indigo-400 shadow-[0_0_20px_rgba(236,72,153,0.55)] shrink-0 animate-float-slow">
+                      <img src="./assets/logo.png" alt="Logo" className="w-full h-full object-cover rounded-[12px]" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-bold text-white font-serif">YouthConnect Portal</h3>
-                      <p className="text-xs text-purple-200">Student & Organizer Verification</p>
+                      <h3 className="text-base font-bold text-white font-serif">
+                        {authDefaultRole === 'student' ? 'Student Verification & Login' : 'Organizer Security Passkey Gate'}
+                      </h3>
+                      <p className="text-[11px] text-purple-200">
+                        {authDefaultRole === 'student' ? 'Academic Credential Verification' : 'Authorized Campus Council Access'}
+                      </p>
                     </div>
                   </div>
                   <button onClick={() => setIsAuthModalOpen(false)} className="p-1.5 rounded-full hover:bg-white/10 text-stone-400 hover:text-white cursor-pointer btn-spring">
                     <Icon name="x" className="w-5 h-5" />
                   </button>
-                </div>
-
-                {/* Role Switcher Tabs */}
-                <div className="px-5 pt-4">
-                  <div className="grid grid-cols-2 p-1 rounded-2xl bg-white/10 border border-white/15">
-                    <button
-                      type="button"
-                      onClick={() => { setAuthTab('student'); setAuthError(''); }}
-                      className={`py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer btn-spring ${
-                        authTab === 'student'
-                          ? 'bg-gradient-to-r from-[#8B7CB6] to-pink-500 text-white shadow-md scale-102'
-                          : 'text-stone-300 hover:text-white'
-                      }`}
-                    >
-                      <Icon name="graduation" className="w-4 h-4" />
-                      <span>Student Portal</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => { setAuthTab('organizer'); setAuthError(''); }}
-                      className={`py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer btn-spring ${
-                        authTab === 'organizer'
-                          ? 'bg-gradient-to-r from-[#8B7CB6] to-pink-500 text-white shadow-md scale-102'
-                          : 'text-stone-300 hover:text-white'
-                      }`}
-                    >
-                      <Icon name="lock" className="w-4 h-4" />
-                      <span>Organizer Passkey Gate</span>
-                    </button>
-                  </div>
                 </div>
 
                 {/* Error Banner */}
@@ -2118,9 +2122,9 @@
                   </div>
                 )}
 
-                {/* Form Content */}
+                {/* Form Content - Cleanly Segregated with NO cross-role tabs */}
                 <div className="p-5">
-                  {authTab === 'student' ? (
+                  {authDefaultRole === 'student' ? (
                     <form onSubmit={handleStudentAuthSubmit} className="space-y-3.5 text-xs">
                       <div>
                         <label className="text-[11px] text-purple-200 block mb-1">Student Full Name</label>
@@ -2135,7 +2139,7 @@
                       </div>
 
                       <div>
-                        <label className="text-[11px] text-purple-200 block mb-1">Academic Email</label>
+                        <label className="text-[11px] text-purple-200 block mb-1">Academic Email / PRN</label>
                         <input
                           type="email"
                           value={authStudentEmail}
@@ -2174,13 +2178,20 @@
                         type="submit"
                         className="w-full py-3 mt-2 rounded-xl bg-gradient-to-r from-[#8B7CB6] via-purple-500 to-pink-500 hover:from-[#7C6BA6] hover:to-pink-600 text-white font-bold text-xs shadow-lg transition-all cursor-pointer btn-spring"
                       >
-                        Sign In as Student
+                        Sign In with College Credentials
                       </button>
                     </form>
                   ) : (
                     <form onSubmit={handleOrgAuthSubmit} className="space-y-3.5 text-xs">
+                      <div className="p-3 rounded-2xl bg-purple-900/30 border border-purple-400/30 mb-2">
+                        <span className="text-[11px] text-purple-200 flex items-center gap-1.5 font-medium">
+                          <Icon name="shieldCheck" className="w-4 h-4 text-emerald-400" />
+                          Authorized for College Club Leads & Event Managers
+                        </span>
+                      </div>
+
                       <div>
-                        <label className="text-[11px] text-purple-200 block mb-1">Organizer / Chapter Email</label>
+                        <label className="text-[11px] text-purple-200 block mb-1">Organizer / Chapter Official Email</label>
                         <input
                           type="email"
                           value={authOrgEmail}
@@ -2217,7 +2228,7 @@
                         className="w-full py-3 mt-2 rounded-xl bg-gradient-to-r from-purple-700 via-indigo-600 to-pink-600 hover:from-purple-800 hover:to-pink-700 text-white font-bold text-xs shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2 btn-spring"
                       >
                         <Icon name="key" className="w-4 h-4" />
-                        <span>Authenticate & Access Organizer Hub</span>
+                        <span>Authenticate & Open Command Center</span>
                       </button>
                     </form>
                   )}

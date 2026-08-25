@@ -137,39 +137,42 @@ export const LoginPortalView: React.FC<LoginPortalViewProps> = ({
           <h2 className="text-2xl font-black text-[#0b1c30] font-headline tracking-tight">
             {authMode === 'signin' ? 'Welcome Back' : 'Create Your Account'}
           </h2>
+          {/* Role Title & Subtitle */}
           <p className="text-xs text-[#727785] mt-1">
             {selectedRole === 'organizer' 
               ? 'Access organizer tools, check-in scanner, and event management' 
               : 'Access digital event passes, tickets, and campus clubs'}
           </p>
 
-          {/* Role selector tabs */}
-          <div className="mt-5 grid grid-cols-2 p-1 bg-[#f4f6fb] rounded-2xl border border-[#e2e7f3] text-xs font-bold">
-            <button
-              type="button"
-              onClick={() => { setSelectedRole('student'); setErrorMessage(null); }}
-              className={`py-2 rounded-xl transition-all flex items-center justify-center gap-1.5 ${
-                selectedRole === 'student'
-                  ? 'bg-white text-[#0058be] shadow-xs'
-                  : 'text-[#727785] hover:text-[#0b1c30]'
-              }`}
-            >
-              <GraduationCap className="w-4 h-4" />
-              <span>Student</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => { setSelectedRole('organizer'); setErrorMessage(null); }}
-              className={`py-2 rounded-xl transition-all flex items-center justify-center gap-1.5 ${
-                selectedRole === 'organizer'
-                  ? 'bg-white text-[#0058be] shadow-xs'
-                  : 'text-[#727785] hover:text-[#0b1c30]'
-              }`}
-            >
-              <Building2 className="w-4 h-4" />
-              <span>Organizer / Club</span>
-            </button>
-          </div>
+          {/* Show role selector tabs ONLY if initialRole is not explicitly student/organizer */}
+          {!initialRole && (
+            <div className="mt-5 grid grid-cols-2 p-1 bg-[#f4f6fb] rounded-2xl border border-[#e2e7f3] text-xs font-bold">
+              <button
+                type="button"
+                onClick={() => { setSelectedRole('student'); setErrorMessage(null); }}
+                className={`py-2 rounded-xl transition-all flex items-center justify-center gap-1.5 ${
+                  selectedRole === 'student'
+                    ? 'bg-white text-[#0058be] shadow-xs'
+                    : 'text-[#727785] hover:text-[#0b1c30]'
+                }`}
+              >
+                <GraduationCap className="w-4 h-4" />
+                <span>Student</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => { setSelectedRole('organizer'); setErrorMessage(null); }}
+                className={`py-2 rounded-xl transition-all flex items-center justify-center gap-1.5 ${
+                  selectedRole === 'organizer'
+                    ? 'bg-white text-[#0058be] shadow-xs'
+                    : 'text-[#727785] hover:text-[#0b1c30]'
+                }`}
+              >
+                <Building2 className="w-4 h-4" />
+                <span>Organizer / Club</span>
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Actionable Error Box */}
@@ -206,25 +209,37 @@ export const LoginPortalView: React.FC<LoginPortalViewProps> = ({
               </span>
             </div>
             <div className="flex flex-wrap gap-1.5">
-              <button
-                type="button"
-                onClick={() => handleDemoStudent('Rahul Sharma', '21BCE045', NASHIK_COLLEGES[0], 'Computer Science')}
-                className="px-2.5 py-1 rounded-lg bg-white hover:bg-blue-100 text-[#0b1c30] text-[11px] font-bold border border-blue-200"
-              >
-                Rahul (KKWIEER)
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setSelectedRole('organizer');
-                  setClubName('TechSprint Organizing Committee');
-                  setOrgEmail('organizers@techsprint2026.org');
-                  setErrorMessage(null);
-                }}
-                className="px-2.5 py-1 rounded-lg bg-emerald-100 hover:bg-emerald-200 text-emerald-900 text-[11px] font-bold border border-emerald-300"
-              >
-                TechSprint Lead (Org)
-              </button>
+              {selectedRole === 'student' ? (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => handleDemoStudent('Rahul Sharma', '21BCE045', NASHIK_COLLEGES[0], 'Computer Science')}
+                    className="px-2.5 py-1 rounded-lg bg-white hover:bg-blue-100 text-[#0b1c30] text-[11px] font-bold border border-blue-200"
+                  >
+                    Rahul (KKWIEER)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleDemoStudent('Siddhi Lawte', '22BCE104', 'MET’s Institute of Engineering (MET BKC)', 'Computer Engineering')}
+                    className="px-2.5 py-1 rounded-lg bg-white hover:bg-purple-100 text-[#0b1c30] text-[11px] font-bold border border-purple-200"
+                  >
+                    Siddhi (MET BKC)
+                  </button>
+                </>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedRole('organizer');
+                    setClubName('TechSprint Organizing Committee');
+                    setOrgEmail('organizers@techsprint2026.org');
+                    setErrorMessage(null);
+                  }}
+                  className="px-2.5 py-1 rounded-lg bg-emerald-100 hover:bg-emerald-200 text-emerald-900 text-[11px] font-bold border border-emerald-300"
+                >
+                  TechSprint Lead (Org)
+                </button>
+              )}
             </div>
           </div>
 
