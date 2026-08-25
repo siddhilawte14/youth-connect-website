@@ -1216,6 +1216,18 @@
                   </button>
                 )}
 
+                {/* Organizer Login Button (Directly opens dedicated Organizer Passkey Gate) */}
+                {userProfile?.role !== 'organizer' && (
+                  <button
+                    onClick={() => handleOpenAuthModal('organizer')}
+                    className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-950/70 hover:bg-purple-900/90 border border-purple-400/40 text-xs font-bold text-purple-200 hover:text-white transition-all cursor-pointer btn-spring shadow-sm"
+                    title="Organizer Security Passkey Gate"
+                  >
+                    <Icon name="lock" className="w-3.5 h-3.5 text-pink-300" />
+                    <span>Organizer Login</span>
+                  </button>
+                )}
+
                 {/* Student Login / Profile badge & Dropdown */}
                 {userProfile?.isLoggedIn ? (
                   <div className="relative" style={{ zIndex: 150 }}>
@@ -1461,15 +1473,30 @@
                     </p>
                   </ScrollReveal>
 
-                  {/* Pop-In CTA Button */}
+                  {/* Pop-In CTA Buttons */}
                   <ScrollReveal delay={280}>
-                    <div className="mt-8 flex items-center justify-center gap-3 max-w-md mx-auto">
+                    <div className="mt-8 flex flex-wrap items-center justify-center gap-3.5 max-w-lg mx-auto">
                       <button
                         onClick={() => navigateTo('explore')}
-                        className="px-8 py-3.5 rounded-full text-xs sm:text-sm font-bold text-white bg-gradient-to-r from-[#8B7CB6] via-purple-500 to-pink-500 hover:from-[#7C6BA6] hover:to-pink-600 transition-all shadow-[0_0_25px_rgba(236,72,153,0.45)] border border-pink-200/60 flex items-center gap-2 cursor-pointer btn-spring"
+                        className="px-7 py-3.5 rounded-full text-xs sm:text-sm font-bold text-white bg-gradient-to-r from-[#8B7CB6] via-purple-500 to-pink-500 hover:from-[#7C6BA6] hover:to-pink-600 transition-all shadow-[0_0_25px_rgba(236,72,153,0.45)] border border-pink-200/60 flex items-center gap-2 cursor-pointer btn-spring"
                       >
                         <span>Explore Campus Events</span>
                         <Icon name="arrowRight" className="w-4 h-4 animate-pulse" />
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          if (userProfile?.role === 'organizer') {
+                            setActiveRoleView('organizer');
+                            navigateTo('organizer_dashboard');
+                          } else {
+                            handleOpenAuthModal('organizer');
+                          }
+                        }}
+                        className="px-6 py-3.5 rounded-full text-xs sm:text-sm font-bold text-purple-200 bg-white/10 hover:bg-white/20 border border-white/20 transition-all flex items-center gap-2 cursor-pointer btn-spring"
+                      >
+                        <Icon name="lock" className="w-4 h-4 text-pink-300" />
+                        <span>Organizer Portal</span>
                       </button>
                     </div>
                   </ScrollReveal>
@@ -1623,6 +1650,43 @@
             {currentPage === 'explore' && (
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
                 
+                {/* Organizer Portal Callout on Main Explore Page */}
+                <ScrollReveal delay={40}>
+                  <div className="p-4.5 rounded-3xl bg-gradient-to-r from-purple-950/90 via-[#181126] to-indigo-950/90 border border-purple-500/30 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-2xl">
+                    <div className="flex items-center gap-3.5">
+                      <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-purple-600 to-pink-500 p-0.5 shadow-lg flex items-center justify-center shrink-0">
+                        <div className="w-full h-full bg-[#181126] rounded-[14px] flex items-center justify-center text-pink-300">
+                          <Icon name="lock" className="w-5 h-5" />
+                        </div>
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <h4 className="text-sm font-bold text-white font-headline">College Clubs & Event Organizers</h4>
+                          <span className="text-[9px] font-bold uppercase bg-pink-500/25 text-pink-300 border border-pink-400/30 px-2 py-0.2 rounded-full">
+                            Organizer Hub
+                          </span>
+                        </div>
+                        <p className="text-xs text-purple-200 mt-0.5">Host collegiate hackathons & fests, scan digital passes, manage ticket sales, and dispatch bulk broadcasts</p>
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={() => {
+                        if (userProfile?.role === 'organizer') {
+                          setActiveRoleView('organizer');
+                          navigateTo('organizer_dashboard');
+                        } else {
+                          handleOpenAuthModal('organizer');
+                        }
+                      }}
+                      className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-700 via-indigo-600 to-pink-600 hover:from-purple-800 hover:to-pink-700 text-white font-bold text-xs shadow-lg transition-all cursor-pointer flex items-center gap-2 btn-spring shrink-0"
+                    >
+                      <Icon name="key" className="w-4 h-4 text-pink-300" />
+                      <span>{userProfile?.role === 'organizer' ? 'Open Organizer Hub' : 'Organizer Login / Gate'}</span>
+                    </button>
+                  </div>
+                </ScrollReveal>
+
                 {/* Search & Filter Header Bar */}
                 <ScrollReveal delay={60}>
                   <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-3xl glass-panel-3d shadow-xl">
