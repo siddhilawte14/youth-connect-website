@@ -78,7 +78,7 @@ export const LocationModal: React.FC<LocationModalProps> = ({
   );
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
       <div className="bg-[#0e1017] text-white rounded-3xl w-full max-w-lg shadow-2xl border border-white/15 overflow-hidden">
         {/* Header */}
         <div className="bg-[#141722] border-b border-white/10 p-5 flex items-center justify-between">

@@ -84,6 +84,35 @@ export const RegistrationFlowView: React.FC<RegistrationFlowViewProps> = ({
 
   const ticketNumber = event.ticketId || `TKT-${Math.floor(1000 + Math.random() * 9000)}-${event.category.substring(0, 3).toUpperCase()}`;
 
+  const completeRegistrationWithPayId = (paymentId: string) => {
+    setPaymentStatus('success');
+    confetti({
+      particleCount: 80,
+      spread: 70,
+      origin: { y: 0.6 }
+    });
+
+    const newPass: DigitalPass = {
+      ticketId: ticketNumber,
+      eventId: event.id,
+      eventTitle: event.title,
+      venue: event.venue,
+      date: event.date.fullDate,
+      time: event.date.time.split('-')[0].trim() || '09:00 AM',
+      tier: event.fee > 0 ? 'VIP ACCESS' : 'STANDARD PASS',
+      attendeeName: fullName,
+      collegeId: collegeId,
+      department: department || 'Engineering',
+      teamName: teamName,
+      qrCodeUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAFq60ErKFLT51rke9lWUdS1Pnm8Nn-xLr_tYgLLdxom0R3x8ewc33THepzmWmoYN5dfL6wKFFT6oDBMfRIXweZpnS-NmDRcxCv6yNPuv8xHOqWVFNkesF9kQ1HsiV_VcDSvet2P7EPKAvBTABA19DH0s-_VMGMO87npPgsLiB1K--qgHfBEwvr5q9B7aancYomT3HVnZjYoCH7rsDozCsyQeKPUbs6VYGwr9WB4AVvsxEwGtGvEbFr',
+      status: 'Valid',
+      amountPaid: totalAmount,
+      issuedAt: new Date().toISOString(),
+    };
+
+    handleComplete(newPass);
+  };
+
   const handlePay = (simulatedState: 'success' | 'failed' | 'pending' = 'success') => {
     if (!fullName.trim() || !collegeId.trim()) {
       setPaymentStatus('failed');
@@ -91,35 +120,48 @@ export const RegistrationFlowView: React.FC<RegistrationFlowViewProps> = ({
       return;
     }
 
+    if (totalAmount > 0 && typeof (window as any).Razorpay !== 'undefined' && simulatedState === 'success') {
+      try {
+        const options = {
+          key: 'rzp_test_YouthConnect2026',
+          amount: totalAmount * 100,
+          currency: 'INR',
+          name: 'YouthConnect Campus Hub',
+          description: `Registration for ${event.title}`,
+          image: './assets/logo.png',
+          prefill: {
+            name: fullName,
+            email: `${collegeId.toLowerCase()}@college.edu.in`,
+            contact: '9876543210',
+          },
+          theme: {
+            color: '#0058be',
+          },
+          handler: (response: any) => {
+            completeRegistrationWithPayId(response.razorpay_payment_id || `pay_${Date.now()}`);
+          },
+          modal: {
+            ondismiss: () => {
+              setPaymentStatus('idle');
+            }
+          }
+        };
+        const rzp = new (window as any).Razorpay(options);
+        rzp.on('payment.failed', (resp: any) => {
+          setPaymentStatus('failed');
+          setErrorMessage(resp.error?.description || 'Transaction declined. Please try UPI / Card.');
+        });
+        rzp.open();
+        return;
+      } catch (e) {
+        console.warn('Razorpay SDK fallback:', e);
+      }
+    }
+
     setPaymentStatus('processing');
     setTimeout(() => {
       if (simulatedState === 'success') {
-        setPaymentStatus('success');
-        confetti({
-          particleCount: 80,
-          spread: 70,
-          origin: { y: 0.6 }
-        });
-
-        const newPass: DigitalPass = {
-          ticketId: ticketNumber,
-          eventId: event.id,
-          eventTitle: event.title,
-          venue: event.venue,
-          date: event.date.fullDate,
-          time: event.date.time.split('-')[0].trim() || '09:00 AM',
-          tier: event.fee > 0 ? 'VIP ACCESS' : 'STANDARD PASS',
-          attendeeName: fullName,
-          collegeId: collegeId,
-          department: department || 'Engineering',
-          teamName: teamName,
-          qrCodeUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAFq60ErKFLT51rke9lWUdS1Pnm8Nn-xLr_tYgLLdxom0R3x8ewc33THepzmWmoYN5dfL6wKFFT6oDBMfRIXweZpnS-NmDRcxCv6yNPuv8xHOqWVFNkesF9kQ1HsiV_VcDSvet2P7EPKAvBTABA19DH0s-_VMGMO87npPgsLiB1K--qgHfBEwvr5q9B7aancYomT3HVnZjYoCH7rsDozCsyQeKPUbs6VYGwr9WB4AVvsxEwGtGvEbFr',
-          status: 'Valid',
-          amountPaid: totalAmount,
-          issuedAt: new Date().toISOString(),
-        };
-
-        handleComplete(newPass);
+        completeRegistrationWithPayId(`pay_sim_${Date.now()}`);
       } else if (simulatedState === 'failed') {
         setPaymentStatus('failed');
         setErrorMessage('UPI transaction declined by bank server. Please retry.');

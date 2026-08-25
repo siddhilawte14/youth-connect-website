@@ -117,7 +117,7 @@ export const GateScannerModal: React.FC<GateScannerModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-xs animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
       <div className={`rounded-3xl w-full max-w-xl max-h-[94vh] overflow-y-auto shadow-2xl border flex flex-col transition-colors ${
         highContrastOutdoorMode 
           ? 'bg-black text-white border-yellow-400' 

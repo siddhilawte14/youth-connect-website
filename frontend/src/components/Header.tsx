@@ -140,58 +140,94 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* Main Horizontal Links */}
           <nav className="hidden md:flex items-center gap-1">
-            <button
-              onClick={() => setCurrentTab('discovery')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${
-                currentTab === 'discovery'
-                  ? 'text-white font-extrabold border-b-2 border-[#0066ff]'
-                  : 'text-gray-300 hover:text-white'
-              }`}
-            >
-              Home
-            </button>
+            {activeRole === 'organizer' ? (
+              <>
+                <button
+                  onClick={() => setCurrentTab('organizer_dashboard')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${
+                    currentTab === 'organizer_dashboard'
+                      ? 'text-white font-extrabold border-b-2 border-[#0066ff]'
+                      : 'text-gray-300 hover:text-white'
+                  }`}
+                >
+                  Dashboard & Stats
+                </button>
 
-            <button
-              onClick={() => setCurrentTab('student_dashboard')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${
-                currentTab === 'student_dashboard'
-                  ? 'text-white font-extrabold border-b-2 border-[#0066ff]'
-                  : 'text-gray-300 hover:text-white'
-              }`}
-            >
-              Student Hub
-            </button>
+                <button
+                  onClick={handleOpenScanner}
+                  className="px-3 py-1.5 rounded-lg text-xs font-bold text-gray-300 hover:text-white transition-colors flex items-center gap-1.5"
+                >
+                  <QrCode className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>Gate Scanner</span>
+                </button>
 
-            <button
-              onClick={() => setCurrentTab('communities')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${
-                currentTab === 'communities'
-                  ? 'text-white font-extrabold border-b-2 border-[#0066ff]'
-                  : 'text-gray-300 hover:text-white'
-              }`}
-            >
-              Communities
-            </button>
+                <button
+                  onClick={() => setCurrentTab('communities')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${
+                    currentTab === 'communities'
+                      ? 'text-white font-extrabold border-b-2 border-[#0066ff]'
+                      : 'text-gray-300 hover:text-white'
+                  }`}
+                >
+                  Volunteer Drives
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={() => setCurrentTab('discovery')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${
+                    currentTab === 'discovery'
+                      ? 'text-white font-extrabold border-b-2 border-[#0066ff]'
+                      : 'text-gray-300 hover:text-white'
+                  }`}
+                >
+                  Explore
+                </button>
 
-            <button
-              onClick={() => setCurrentTab('my_events')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5 ${
-                currentTab === 'my_events'
-                  ? 'text-white font-extrabold border-b-2 border-[#0066ff]'
-                  : 'text-gray-300 hover:text-white'
-              }`}
-            >
-              <span>My Passes</span>
-              {displayRegisteredCount > 0 && (
-                <span className="bg-[#0066ff] text-white text-[10px] px-1.5 py-0.2 rounded-full font-extrabold">
-                  {displayRegisteredCount}
-                </span>
-              )}
-            </button>
+                <button
+                  onClick={() => setCurrentTab('student_dashboard')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${
+                    currentTab === 'student_dashboard'
+                      ? 'text-white font-extrabold border-b-2 border-[#0066ff]'
+                      : 'text-gray-300 hover:text-white'
+                  }`}
+                >
+                  Student Hub
+                </button>
+
+                <button
+                  onClick={() => setCurrentTab('communities')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${
+                    currentTab === 'communities'
+                      ? 'text-white font-extrabold border-b-2 border-[#0066ff]'
+                      : 'text-gray-300 hover:text-white'
+                  }`}
+                >
+                  Communities
+                </button>
+
+                <button
+                  onClick={() => setCurrentTab('my_events')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5 ${
+                    currentTab === 'my_events'
+                      ? 'text-white font-extrabold border-b-2 border-[#0066ff]'
+                      : 'text-gray-300 hover:text-white'
+                  }`}
+                >
+                  <span>My Passes</span>
+                  {displayRegisteredCount > 0 && (
+                    <span className="bg-[#0066ff] text-white text-[10px] px-1.5 py-0.2 rounded-full font-extrabold">
+                      {displayRegisteredCount}
+                    </span>
+                  )}
+                </button>
+              </>
+            )}
           </nav>
         </div>
 
-        {/* RIGHT: Location, Search, Notifications, Profile (NO HOST EVENT IN STUDENT VIEW) */}
+        {/* RIGHT: Location, Search, Role Switcher, Notifications, Profile */}
         <div className="flex items-center gap-2 sm:gap-3">
           {/* Location Selector */}
           <button
@@ -204,7 +240,7 @@ export const Header: React.FC<HeaderProps> = ({
             <ChevronDown className="w-3 h-3 text-gray-400" />
           </button>
 
-          {/* Search Trigger with / Keyboard Shortcut */}
+          {/* Search Trigger */}
           <button
             onClick={onOpenSearchModal}
             className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 text-xs text-gray-300 transition-colors"
@@ -217,42 +253,38 @@ export const Header: React.FC<HeaderProps> = ({
             </kbd>
           </button>
 
-          {/* Notifications */}
-          <div className="relative">
+          {/* Top Bar Role Switcher */}
+          {activeRole === 'organizer' ? (
             <button
-              onClick={() => setShowNotifications(!showNotifications)}
-              className="p-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 text-gray-200 relative transition-colors"
-              title="Campus Notifications"
+              onClick={() => {
+                setActiveRole('student');
+                setCurrentTab('discovery');
+              }}
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-950/60 hover:bg-emerald-900/80 border border-emerald-400/40 text-xs font-semibold text-emerald-300 hover:text-white transition-all cursor-pointer"
+              title="Switch to Student Explorer View"
             >
-              <Bell className="w-4 h-4" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#0066ff] ring-2 ring-[#07080c]" />
+              <User className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Student View</span>
             </button>
+          ) : (
+            <button
+              onClick={() => {
+                if (userProfile?.role === 'organizer') {
+                  setActiveRole('organizer');
+                  setCurrentTab('organizer_dashboard');
+                } else if (onOpenLoginPortal) {
+                  onOpenLoginPortal('organizer');
+                }
+              }}
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-900/40 hover:bg-purple-900/70 border border-purple-400/40 text-xs font-semibold text-purple-200 hover:text-white transition-all cursor-pointer"
+              title="Access Organizer Workspace"
+            >
+              <Lock className="w-3.5 h-3.5 text-pink-300" />
+              <span>Organizer Hub</span>
+            </button>
+          )}
 
-            {showNotifications && (
-              <div 
-                className="absolute right-0 mt-2 w-80 bg-[#12141d] rounded-2xl shadow-2xl border border-white/15 p-3 z-50 animate-in fade-in zoom-in-95 duration-150 text-left text-white"
-                onMouseLeave={() => setShowNotifications(false)}
-              >
-                <div className="flex items-center justify-between pb-2 border-b border-white/10 mb-2">
-                  <span className="font-bold text-xs text-white">Campus Alerts</span>
-                  <span className="text-[10px] text-[#38bdf8] font-bold cursor-pointer">Mark all read</span>
-                </div>
-                <div className="space-y-2">
-                  {notifications.map((n) => (
-                    <div key={n.id} className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-xs transition-colors">
-                      <div className="flex justify-between font-bold text-white">
-                        <span>{n.title}</span>
-                        <span className="text-[10px] text-gray-400 font-normal">{n.time}</span>
-                      </div>
-                      <p className="text-[11px] text-gray-300 mt-0.5">{n.desc}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* If the user is an Organizer or Admin, show their workspace jump */}
+          {/* Host Event (Organizer only) */}
           {activeRole === 'organizer' && (
             <button
               onClick={handleOpenCreateEvent}

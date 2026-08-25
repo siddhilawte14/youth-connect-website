@@ -84,7 +84,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
   ).slice(0, 3) : [];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-16 sm:pt-24 p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-150">
+    <div className="fixed inset-0 z-[9999] flex items-start justify-center pt-16 sm:pt-24 p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-150">
       <div className="bg-[#0e1017] text-white rounded-3xl w-full max-w-2xl shadow-2xl border border-white/15 overflow-hidden flex flex-col max-h-[80vh]">
         {/* Search Input Bar */}
         <div className="p-4 sm:p-5 border-b border-white/10 flex items-center gap-3 bg-[#141722]">

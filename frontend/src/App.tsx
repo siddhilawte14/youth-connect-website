@@ -835,7 +835,7 @@ export default function App() {
 
       {/* Global Toast Notification */}
       {toastMessage && (
-        <div className="fixed bottom-20 md:bottom-6 right-6 z-50 bg-[#0b1c30] text-white px-4 py-3 rounded-2xl shadow-2xl border border-blue-500/40 text-xs font-semibold flex items-center gap-2 animate-in slide-in-from-bottom-5">
+        <div className="fixed bottom-20 md:bottom-6 right-6 z-[10000] bg-[#0b1c30] text-white px-4 py-3 rounded-2xl shadow-2xl border border-blue-500/40 text-xs font-semibold flex items-center gap-2 animate-in slide-in-from-bottom-5">
           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
           <span>{toastMessage}</span>
         </div>

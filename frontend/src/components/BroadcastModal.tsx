@@ -78,7 +78,7 @@ export const BroadcastModal: React.FC<BroadcastModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
       <div className="bg-white rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl border border-[#c2c6d6]/60 flex flex-col animate-in zoom-in-95 duration-200">
         {/* Header */}
         <div className="bg-linear-to-r from-[#0058be] to-[#004294] p-5 text-white flex items-center justify-between">

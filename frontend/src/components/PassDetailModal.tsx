@@ -44,7 +44,7 @@ export const PassDetailModal: React.FC<PassDetailModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-xs animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
       <div className="bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl border border-[#c2c6d6]/60 flex flex-col relative animate-in zoom-in-95 duration-200">
         {/* Header Ribbon */}
         <div className="bg-linear-to-r from-[#0058be] to-[#004294] p-5 text-white flex items-center justify-between">
